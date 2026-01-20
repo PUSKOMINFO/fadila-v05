@@ -68,9 +68,9 @@ export default function SiswaDashboard() {
   ];
 
   const quickActions = [
-    { icon: <Calendar className="w-5 h-5" />, label: 'Lihat Riwayat Presensi' },
-    { icon: <ClipboardEdit className="w-5 h-5" />, label: 'Ajukan Koreksi Presensi' },
-    { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Lihat Presensi Mapel' },
+    { icon: <Calendar className="w-5 h-5" />, label: 'Lihat Riwayat Presensi', path: '/riwayat' },
+    { icon: <ClipboardEdit className="w-5 h-5" />, label: 'Ajukan Koreksi Presensi', path: '/izin' },
+    { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Lihat Presensi Mapel', path: '/jadwal' },
   ];
 
   const todaySchedules = getTodaySchedules(user.kelas || '');
@@ -170,6 +170,7 @@ export default function SiswaDashboard() {
             {quickActions.map((action, index) => (
               <button
                 key={index}
+                onClick={() => navigate(action.path)}
                 className="w-full flex items-center justify-between p-3 hover:bg-muted rounded-lg transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -184,7 +185,11 @@ export default function SiswaDashboard() {
       </div>
 
       {/* Bottom Navigation */}
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} role="siswa" />
+      <BottomNav activeTab={activeTab} onTabChange={(tab) => {
+        setActiveTab(tab);
+        if (tab === 'riwayat') navigate('/riwayat');
+        if (tab === 'profil') navigate('/profil');
+      }} role="siswa" />
     </div>
   );
 }

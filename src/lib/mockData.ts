@@ -149,15 +149,37 @@ export const mockUsers: User[] = [
   }
 ];
 
-// Mock Attendance Records for today
+// Mock Attendance Records - historical data for better demo
 const today = new Date().toISOString().split('T')[0];
+const getDateStr = (daysAgo: number) => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date.toISOString().split('T')[0];
+};
 
 export const mockAttendance: AttendanceRecord[] = [
-  { id: 'ATT001', userId: 'STU001', tanggal: today, waktuMasuk: '08:15', status: 'hadir' },
-  { id: 'ATT002', userId: 'STU002', tanggal: today, waktuMasuk: '08:22', status: 'hadir' },
+  // Today
+  { id: 'ATT001', userId: 'STU001', tanggal: today, waktuMasuk: '07:15', status: 'hadir' },
+  { id: 'ATT002', userId: 'STU002', tanggal: today, waktuMasuk: '07:22', status: 'hadir' },
   { id: 'ATT003', userId: 'STU003', tanggal: today, status: 'tidak_hadir', keterangan: 'Tanpa keterangan' },
-  { id: 'ATT004', userId: 'STU004', tanggal: today, waktuMasuk: '08:10', status: 'hadir' },
-  { id: 'ATT005', userId: 'STU005', tanggal: today, waktuMasuk: '08:45', status: 'terlambat' },
+  { id: 'ATT004', userId: 'STU004', tanggal: today, waktuMasuk: '07:10', status: 'hadir' },
+  { id: 'ATT005', userId: 'STU005', tanggal: today, waktuMasuk: '07:45', status: 'terlambat' },
+  // Historical data for STU001 (Fadhila)
+  { id: 'ATT006', userId: 'STU001', tanggal: getDateStr(1), waktuMasuk: '07:20', status: 'hadir' },
+  { id: 'ATT007', userId: 'STU001', tanggal: getDateStr(2), waktuMasuk: '07:25', status: 'hadir' },
+  { id: 'ATT008', userId: 'STU001', tanggal: getDateStr(3), waktuMasuk: '07:45', status: 'terlambat' },
+  { id: 'ATT009', userId: 'STU001', tanggal: getDateStr(4), waktuMasuk: '07:10', status: 'hadir' },
+  { id: 'ATT010', userId: 'STU001', tanggal: getDateStr(5), status: 'sakit', keterangan: 'Demam' },
+  { id: 'ATT011', userId: 'STU001', tanggal: getDateStr(6), status: 'sakit', keterangan: 'Demam' },
+  { id: 'ATT012', userId: 'STU001', tanggal: getDateStr(8), waktuMasuk: '07:18', status: 'hadir' },
+  { id: 'ATT013', userId: 'STU001', tanggal: getDateStr(9), waktuMasuk: '07:22', status: 'hadir' },
+  { id: 'ATT014', userId: 'STU001', tanggal: getDateStr(10), waktuMasuk: '07:15', status: 'hadir' },
+  { id: 'ATT015', userId: 'STU001', tanggal: getDateStr(11), status: 'izin', keterangan: 'Acara keluarga' },
+  { id: 'ATT016', userId: 'STU001', tanggal: getDateStr(12), waktuMasuk: '07:12', status: 'hadir' },
+  { id: 'ATT017', userId: 'STU001', tanggal: getDateStr(13), waktuMasuk: '07:50', status: 'terlambat' },
+  { id: 'ATT018', userId: 'STU001', tanggal: getDateStr(15), waktuMasuk: '07:08', status: 'hadir' },
+  { id: 'ATT019', userId: 'STU001', tanggal: getDateStr(16), waktuMasuk: '07:20', status: 'hadir' },
+  { id: 'ATT020', userId: 'STU001', tanggal: getDateStr(17), waktuMasuk: '07:25', status: 'hadir' },
 ];
 
 // Mock Schedules - Complete weekly schedule
