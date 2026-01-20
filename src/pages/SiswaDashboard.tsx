@@ -61,10 +61,10 @@ export default function SiswaDashboard() {
   if (!user) return null;
 
   const features = [
-    { icon: <BookOpen className="w-6 h-6" />, label: 'Jadwal Mapel', bgColor: 'purple' as const, iconBgColor: 'bg-primary' },
-    { icon: <FileText className="w-6 h-6" />, label: 'Izin', bgColor: 'yellow' as const, iconBgColor: 'bg-warning' },
-    { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success' },
-    { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive' },
+    { icon: <BookOpen className="w-6 h-6" />, label: 'Jadwal Mapel', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/jadwal' },
+    { icon: <FileText className="w-6 h-6" />, label: 'Izin', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin' },
+    { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
+    { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
   ];
 
   const quickActions = [
@@ -157,6 +157,7 @@ export default function SiswaDashboard() {
                 label={feature.label}
                 bgColor={feature.bgColor}
                 iconBgColor={feature.iconBgColor}
+                onClick={() => navigate(feature.path)}
               />
             ))}
           </div>
