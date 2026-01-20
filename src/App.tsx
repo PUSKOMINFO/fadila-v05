@@ -12,6 +12,8 @@ import Perpustakaan from "./pages/Perpustakaan";
 import Pengumuman from "./pages/Pengumuman";
 import Riwayat from "./pages/Riwayat";
 import Profil from "./pages/Profil";
+import RiwayatGuru from "./pages/RiwayatGuru";
+import ProfilGuru from "./pages/ProfilGuru";
 import NotFound from "./pages/NotFound";
 import { initializeMockData } from "./lib/mockData";
 import { useEffect } from "react";
@@ -35,6 +37,8 @@ function AppContent() {
         <Route path="/pengumuman" element={<Pengumuman />} />
         <Route path="/riwayat" element={<Riwayat />} />
         <Route path="/profil" element={<Profil />} />
+        <Route path="/riwayat-guru" element={<RiwayatGuru />} />
+        <Route path="/profil-guru" element={<ProfilGuru />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
