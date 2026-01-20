@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, MapPin, User, BookOpen } from "lucide-react";
 import { getCurrentUser, getAllSchedules, type User as UserType, type Schedule } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { BottomNav } from "@/components/layout/BottomNav";
 
 const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 
@@ -48,10 +49,22 @@ export default function JadwalMapel() {
     return colors[mapel] || 'bg-primary';
   };
 
+  const handleNavChange = (tab: string) => {
+    if (user?.role === 'siswa') {
+      if (tab === 'beranda') navigate('/siswa');
+      if (tab === 'riwayat') navigate('/riwayat');
+      if (tab === 'profil') navigate('/profil');
+    } else {
+      if (tab === 'beranda') navigate('/guru');
+      if (tab === 'riwayat') navigate('/riwayat-guru');
+      if (tab === 'profil') navigate('/profil-guru');
+    }
+  };
+
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="gradient-hero px-4 pt-12 pb-6 text-white">
         <div className="flex items-center gap-3 mb-4">
@@ -63,7 +76,7 @@ export default function JadwalMapel() {
           </button>
           <div>
             <h1 className="text-xl font-bold">Jadwal Pelajaran</h1>
-            <p className="text-sm text-white/80">{user.kelas}</p>
+            <p className="text-sm text-white/80">{user.role === 'siswa' ? user.kelas : user.mapel}</p>
           </div>
         </div>
       </div>
@@ -91,7 +104,7 @@ export default function JadwalMapel() {
       {/* Schedule List */}
       <div className="px-4 py-6 space-y-3">
         {filteredSchedules.length > 0 ? (
-          filteredSchedules.map((schedule, index) => (
+          filteredSchedules.map((schedule) => (
             <div
               key={schedule.id}
               className="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow"
@@ -143,6 +156,13 @@ export default function JadwalMapel() {
           </div>
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav 
+        activeTab="beranda" 
+        onTabChange={handleNavChange} 
+        role={user.role} 
+      />
     </div>
   );
 }
