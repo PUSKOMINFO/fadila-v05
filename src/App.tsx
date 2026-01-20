@@ -10,6 +10,8 @@ import JadwalMapel from "./pages/JadwalMapel";
 import Izin from "./pages/Izin";
 import Perpustakaan from "./pages/Perpustakaan";
 import Pengumuman from "./pages/Pengumuman";
+import Riwayat from "./pages/Riwayat";
+import Profil from "./pages/Profil";
 import NotFound from "./pages/NotFound";
 import { initializeMockData } from "./lib/mockData";
 import { useEffect } from "react";
@@ -31,6 +33,8 @@ function AppContent() {
         <Route path="/izin" element={<Izin />} />
         <Route path="/perpustakaan" element={<Perpustakaan />} />
         <Route path="/pengumuman" element={<Pengumuman />} />
+        <Route path="/riwayat" element={<Riwayat />} />
+        <Route path="/profil" element={<Profil />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
