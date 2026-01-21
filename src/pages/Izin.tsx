@@ -126,7 +126,7 @@ export default function Izin() {
                 <Plus className="w-5 h-5" />
               </button>
             </DialogTrigger>
-            <DialogContent className="mx-4 rounded-2xl">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Ajukan Izin / Sakit</DialogTitle>
               </DialogHeader>
