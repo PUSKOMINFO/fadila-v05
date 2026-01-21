@@ -5,6 +5,7 @@ import { getCurrentUser, getSubjectAttendance, getAllSchedules, getStudents, typ
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function PresensiMapel() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function PresensiMapel() {
   const [selectedMapel, setSelectedMapel] = useState<string>('semua');
   const [subjects, setSubjects] = useState<string[]>([]);
   const [students, setStudents] = useState<User[]>([]);
+  const [studentAttendanceMap, setStudentAttendanceMap] = useState<Map<string, SubjectAttendance[]>>(new Map());
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -29,19 +31,25 @@ export default function PresensiMapel() {
     setSubjects(uniqueSubjects);
 
     if (currentUser.role === 'siswa') {
-      // Get subject attendance for this student
+      // Get subject attendance for this student only
       const data = getSubjectAttendance(currentUser.id);
       setAttendanceData(data);
     } else {
       // For guru, get all students and their attendance
       const allStudents = getStudents();
       setStudents(allStudents);
-      // Aggregate all students' attendance data
+      
+      // Create a map of student ID to their attendance
+      const attendanceMap = new Map<string, SubjectAttendance[]>();
       const allAttendance: SubjectAttendance[] = [];
+      
       allStudents.forEach(student => {
         const studentAttendance = getSubjectAttendance(student.id);
+        attendanceMap.set(student.id, studentAttendance);
         allAttendance.push(...studentAttendance);
       });
+      
+      setStudentAttendanceMap(attendanceMap);
       setAttendanceData(allAttendance);
     }
   }, [navigate]);
@@ -67,7 +75,7 @@ export default function PresensiMapel() {
     ? attendanceData 
     : attendanceData.filter(a => a.mapel === selectedMapel);
 
-  // Group attendance by subject for summary
+  // Group attendance by subject for summary (Guru view)
   const subjectSummary = subjects.map(mapel => {
     const subjectData = attendanceData.filter(a => a.mapel === mapel);
     const hadir = subjectData.filter(a => a.status === 'hadir').length;
@@ -80,6 +88,20 @@ export default function PresensiMapel() {
 
     return { mapel, hadir, terlambat, tidakHadir, izin, sakit, total, percentage };
   });
+
+  // Simple subject status for Siswa view
+  const getLatestStatusPerSubject = () => {
+    const latestStatus: Map<string, SubjectAttendance> = new Map();
+    
+    attendanceData.forEach(record => {
+      const existing = latestStatus.get(record.mapel);
+      if (!existing || new Date(record.tanggal) > new Date(existing.tanggal)) {
+        latestStatus.set(record.mapel, record);
+      }
+    });
+    
+    return Array.from(latestStatus.values());
+  };
 
   const getSubjectColor = (mapel: string) => {
     const colors: Record<string, string> = {
@@ -122,6 +144,29 @@ export default function PresensiMapel() {
     });
   };
 
+  // Get students with their attendance for a specific subject (Guru view)
+  const getStudentsWithAttendance = (mapel: string) => {
+    return students.map(student => {
+      const studentData = studentAttendanceMap.get(student.id) || [];
+      const subjectRecords = studentData.filter(a => a.mapel === mapel);
+      const latestRecord = subjectRecords.sort((a, b) => 
+        new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime()
+      )[0];
+      
+      return {
+        ...student,
+        latestStatus: latestRecord?.status || 'tidak_hadir',
+        latestDate: latestRecord?.tanggal,
+        totalHadir: subjectRecords.filter(r => r.status === 'hadir' || r.status === 'terlambat').length,
+        totalPertemuan: subjectRecords.length
+      };
+    });
+  };
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+  };
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
@@ -134,13 +179,13 @@ export default function PresensiMapel() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold">
-            {isGuru ? 'Presensi Per Mata Pelajaran' : 'Presensi Mata Pelajaran'}
+            {isGuru ? 'Presensi Per Mata Pelajaran' : 'Status Kehadiran Mapel'}
           </h1>
         </div>
         <p className="text-white/80 text-sm">
           {isGuru 
             ? 'Kelola dan lihat rekap kehadiran siswa per mata pelajaran'
-            : 'Data presensi per mata pelajaran yang dikelola oleh guru mapel'}
+            : 'Lihat status kehadiran Anda di setiap mata pelajaran'}
         </p>
         {isGuru && (
           <div className="flex items-center gap-4 mt-4 text-sm">
@@ -158,152 +203,239 @@ export default function PresensiMapel() {
 
       {/* Content */}
       <div className="px-4 py-4 space-y-4">
-        {/* Subject Summary Cards */}
-        <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            <BookOpen className="w-4 h-4" />
-            Ringkasan Per Mata Pelajaran
-          </h3>
-          <div className="space-y-3">
-            {subjectSummary.map((summary) => (
-              <div 
-                key={summary.mapel}
-                className="bg-card rounded-xl border border-border p-4"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={cn(
-                      "w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center",
-                      getSubjectColor(summary.mapel)
-                    )}>
-                      <BookOpen className="w-5 h-5 text-white" />
+        {/* GURU VIEW - Full detailed view with student names and stats */}
+        {isGuru && (
+          <>
+            {/* Subject Summary Cards with Percentage */}
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                Ringkasan Per Mata Pelajaran
+              </h3>
+              <div className="space-y-3">
+                {subjectSummary.map((summary) => (
+                  <div 
+                    key={summary.mapel}
+                    className="bg-card rounded-xl border border-border p-4"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center",
+                          getSubjectColor(summary.mapel)
+                        )}>
+                          <BookOpen className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">{summary.mapel}</p>
+                          <p className="text-xs text-muted-foreground">{summary.total} pertemuan</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={cn(
+                          "text-lg font-bold",
+                          summary.percentage >= 75 ? "text-success" : 
+                          summary.percentage >= 50 ? "text-warning" : "text-destructive"
+                        )}>
+                          {summary.percentage}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">Kehadiran</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-foreground">{summary.mapel}</p>
-                      <p className="text-xs text-muted-foreground">{summary.total} pertemuan</p>
+                    
+                    {/* Status breakdown */}
+                    <div className="grid grid-cols-5 gap-2 text-center text-xs">
+                      <div className="bg-success/10 rounded-lg p-2">
+                        <p className="font-semibold text-success">{summary.hadir}</p>
+                        <p className="text-muted-foreground">Hadir</p>
+                      </div>
+                      <div className="bg-warning/10 rounded-lg p-2">
+                        <p className="font-semibold text-warning">{summary.terlambat}</p>
+                        <p className="text-muted-foreground">Telat</p>
+                      </div>
+                      <div className="bg-destructive/10 rounded-lg p-2">
+                        <p className="font-semibold text-destructive">{summary.tidakHadir}</p>
+                        <p className="text-muted-foreground">Alpha</p>
+                      </div>
+                      <div className="bg-info/10 rounded-lg p-2">
+                        <p className="font-semibold text-info">{summary.izin}</p>
+                        <p className="text-muted-foreground">Izin</p>
+                      </div>
+                      <div className="bg-info/10 rounded-lg p-2">
+                        <p className="font-semibold text-info">{summary.sakit}</p>
+                        <p className="text-muted-foreground">Sakit</p>
+                      </div>
+                    </div>
+
+                    {/* Student List for this subject */}
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <p className="text-xs font-medium text-muted-foreground mb-3">Daftar Siswa</p>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {getStudentsWithAttendance(summary.mapel).map((student) => (
+                          <div 
+                            key={student.id}
+                            className="flex items-center justify-between py-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Avatar className="w-8 h-8">
+                                <AvatarImage src={student.avatar} alt={student.nama} />
+                                <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+                                  {getInitials(student.nama)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="text-sm font-medium text-foreground">{student.nama}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {student.totalHadir}/{student.totalPertemuan} hadir
+                                </p>
+                              </div>
+                            </div>
+                            <StatusBadge status={student.latestStatus as any} />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className={cn(
-                      "text-lg font-bold",
-                      summary.percentage >= 75 ? "text-success" : 
-                      summary.percentage >= 50 ? "text-warning" : "text-destructive"
-                    )}>
-                      {summary.percentage}%
+                ))}
+
+                {subjectSummary.length === 0 && (
+                  <div className="bg-card rounded-xl border border-border p-8 text-center">
+                    <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
+                    <p className="font-medium text-foreground">Belum Ada Data</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Data presensi mata pelajaran akan muncul setelah guru mengisi kehadiran
                     </p>
-                    <p className="text-xs text-muted-foreground">Kehadiran</p>
                   </div>
-                </div>
-                
-                {/* Status breakdown */}
-                <div className="grid grid-cols-5 gap-2 text-center text-xs">
-                  <div className="bg-success/10 rounded-lg p-2">
-                    <p className="font-semibold text-success">{summary.hadir}</p>
-                    <p className="text-muted-foreground">Hadir</p>
-                  </div>
-                  <div className="bg-warning/10 rounded-lg p-2">
-                    <p className="font-semibold text-warning">{summary.terlambat}</p>
-                    <p className="text-muted-foreground">Telat</p>
-                  </div>
-                  <div className="bg-destructive/10 rounded-lg p-2">
-                    <p className="font-semibold text-destructive">{summary.tidakHadir}</p>
-                    <p className="text-muted-foreground">Alpha</p>
-                  </div>
-                  <div className="bg-info/10 rounded-lg p-2">
-                    <p className="font-semibold text-info">{summary.izin}</p>
-                    <p className="text-muted-foreground">Izin</p>
-                  </div>
-                  <div className="bg-info/10 rounded-lg p-2">
-                    <p className="font-semibold text-info">{summary.sakit}</p>
-                    <p className="text-muted-foreground">Sakit</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {subjectSummary.length === 0 && (
-              <div className="bg-card rounded-xl border border-border p-8 text-center">
-                <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
-                <p className="font-medium text-foreground">Belum Ada Data</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Data presensi mata pelajaran akan muncul setelah guru mengisi kehadiran
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Filter by Subject */}
-        <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            <Filter className="w-4 h-4" />
-            Riwayat Presensi
-          </h3>
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
-            <button
-              onClick={() => setSelectedMapel('semua')}
-              className={cn(
-                "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
-                selectedMapel === 'semua'
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              )}
-            >
-              Semua
-            </button>
-            {subjects.map((mapel) => (
-              <button
-                key={mapel}
-                onClick={() => setSelectedMapel(mapel)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
-                  selectedMapel === mapel
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
                 )}
-              >
-                {mapel}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Attendance List */}
-        <div className="space-y-2">
-          {filteredAttendance.map((record) => (
-            <div
-              key={record.id}
-              className="bg-card rounded-xl border border-border p-4 flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center",
-                  getSubjectColor(record.mapel)
-                )}>
-                  {getStatusIcon(record.status)}
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">{record.mapel}</p>
-                  <p className="text-xs text-muted-foreground">{formatDate(record.tanggal)}</p>
-                  <p className="text-xs text-muted-foreground">{record.guru}</p>
-                </div>
               </div>
-              <StatusBadge status={record.status} />
             </div>
-          ))}
 
-          {filteredAttendance.length === 0 && (
-            <div className="bg-card rounded-xl border border-border p-8 text-center">
-              <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="font-medium text-foreground">Tidak Ada Data</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                {selectedMapel === 'semua' 
-                  ? 'Belum ada riwayat presensi mata pelajaran'
-                  : `Belum ada data presensi untuk ${selectedMapel}`}
-              </p>
+            {/* Filter and History */}
+            <div>
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                Riwayat Presensi Detail
+              </h3>
+              <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+                <button
+                  onClick={() => setSelectedMapel('semua')}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                    selectedMapel === 'semua'
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  )}
+                >
+                  Semua
+                </button>
+                {subjects.map((mapel) => (
+                  <button
+                    key={mapel}
+                    onClick={() => setSelectedMapel(mapel)}
+                    className={cn(
+                      "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                      selectedMapel === mapel
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                  >
+                    {mapel}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
+
+            {/* Detailed Attendance List for Guru */}
+            <div className="space-y-2">
+              {filteredAttendance.map((record) => {
+                const student = students.find(s => {
+                  const studentData = studentAttendanceMap.get(s.id);
+                  return studentData?.some(a => a.id === record.id);
+                });
+                
+                return (
+                  <div
+                    key={record.id}
+                    className="bg-card rounded-xl border border-border p-4 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center",
+                        getSubjectColor(record.mapel)
+                      )}>
+                        {getStatusIcon(record.status)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{student?.nama || 'Siswa'}</p>
+                        <p className="text-xs text-muted-foreground">{record.mapel} • {formatDate(record.tanggal)}</p>
+                      </div>
+                    </div>
+                    <StatusBadge status={record.status} />
+                  </div>
+                );
+              })}
+
+              {filteredAttendance.length === 0 && (
+                <div className="bg-card rounded-xl border border-border p-8 text-center">
+                  <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
+                  <p className="font-medium text-foreground">Tidak Ada Data</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {selectedMapel === 'semua' 
+                      ? 'Belum ada riwayat presensi mata pelajaran'
+                      : `Belum ada data presensi untuk ${selectedMapel}`}
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* SISWA VIEW - Simple status per subject only */}
+        {!isGuru && (
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              Status Kehadiran Per Mata Pelajaran
+            </h3>
+            <div className="space-y-3">
+              {getLatestStatusPerSubject().map((record) => (
+                <div 
+                  key={record.id}
+                  className="bg-card rounded-xl border border-border p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center",
+                        getSubjectColor(record.mapel)
+                      )}>
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">{record.mapel}</p>
+                        <p className="text-xs text-muted-foreground">{record.guru}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Pertemuan terakhir: {formatDate(record.tanggal)}
+                        </p>
+                      </div>
+                    </div>
+                    <StatusBadge status={record.status} />
+                  </div>
+                </div>
+              ))}
+
+              {getLatestStatusPerSubject().length === 0 && (
+                <div className="bg-card rounded-xl border border-border p-8 text-center">
+                  <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
+                  <p className="font-medium text-foreground">Belum Ada Data</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Data kehadiran akan muncul setelah guru mengisi presensi
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav 
