@@ -278,7 +278,7 @@ export default function RiwayatGuru() {
 
       {/* Edit Dialog */}
       <Dialog open={!!selectedStudent} onOpenChange={() => setSelectedStudent(null)}>
-        <DialogContent className="mx-4 rounded-2xl">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Presensi</DialogTitle>
           </DialogHeader>

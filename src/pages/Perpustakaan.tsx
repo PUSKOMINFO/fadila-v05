@@ -297,7 +297,7 @@ export default function Perpustakaan() {
 
       {/* Book Detail Dialog */}
       <Dialog open={!!selectedBook} onOpenChange={() => setSelectedBook(null)}>
-        <DialogContent className="mx-4 rounded-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
           {selectedBook && (
             <>
               <DialogHeader>
