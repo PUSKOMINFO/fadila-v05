@@ -147,11 +147,52 @@ export default function GuruDashboard() {
             </div>
           </div>
 
-          {/* View Button */}
-          <Button className="w-full gradient-success text-white font-medium py-4 rounded-xl mb-4">
-            <CheckCircle2 className="w-4 h-4 mr-2" />
-            📊 Lihat Presensi Per Mata Pelajaran
-          </Button>
+        {/* Enhanced Subject Attendance Button */}
+        <button 
+          onClick={() => navigate('/presensi-mapel')}
+          className="group w-full relative overflow-hidden rounded-2xl p-4 mb-4 bg-gradient-to-r from-primary via-primary/90 to-accent transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
+        >
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+          
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Icon Container with Animation */}
+              <div className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:rotate-6 transition-transform duration-300">
+                <BookOpen className="w-7 h-7 text-white" />
+              </div>
+              
+              <div className="text-left">
+                <h4 className="text-white font-bold text-base">Presensi Per Mata Pelajaran</h4>
+                <p className="text-white/70 text-sm mt-0.5">Kelola kehadiran siswa per mapel</p>
+              </div>
+            </div>
+            
+            {/* Arrow with Animation */}
+            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 group-hover:translate-x-1 transition-all duration-300">
+              <TrendingUp className="w-5 h-5 text-white" />
+            </div>
+          </div>
+          
+          {/* Stats Preview */}
+          <div className="relative flex items-center gap-3 mt-4 pt-3 border-t border-white/20">
+            <div className="flex items-center gap-1.5 text-white/80 text-xs">
+              <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+              <span>6 Mapel Aktif</span>
+            </div>
+            <div className="w-1 h-1 rounded-full bg-white/40" />
+            <div className="flex items-center gap-1.5 text-white/80 text-xs">
+              <Users className="w-3.5 h-3.5" />
+              <span>{totalStudents} Siswa</span>
+            </div>
+            <div className="w-1 h-1 rounded-full bg-white/40" />
+            <div className="flex items-center gap-1.5 text-white/80 text-xs">
+              <TrendingUp className="w-3.5 h-3.5 text-success" />
+              <span>{attendancePercentage}%</span>
+            </div>
+          </div>
+        </button>
 
           {/* Search */}
           <div className="relative mb-4">
