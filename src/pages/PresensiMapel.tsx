@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, CheckCircle2, AlertCircle, Clock, XCircle, Filter, Users } from "lucide-react";
-import { getCurrentUser, getSubjectAttendance, getAllSchedules, getStudents, type User, type SubjectAttendance } from "@/lib/mockData";
+import { ArrowLeft, BookOpen, CheckCircle2, AlertCircle, Clock, XCircle, Filter, Users, TrendingUp, UserCheck, UserX } from "lucide-react";
+import { getCurrentUser, getSubjectAttendance, getAllSubjectAttendance, getAllSchedules, getStudents, type User, type SubjectAttendance } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { StatCard } from "@/components/cards/StatCard";
 
 export default function PresensiMapel() {
   const navigate = useNavigate();
@@ -24,8 +25,8 @@ export default function PresensiMapel() {
     }
     setUser(currentUser);
 
-    // Get all unique subjects from schedules
-    const kelas = currentUser.role === 'siswa' ? (currentUser.kelas || '') : 'XII IPA 1';
+    // Get all unique subjects from schedules - use Kelas 10A for guru
+    const kelas = currentUser.role === 'siswa' ? (currentUser.kelas || 'Kelas 10A') : 'Kelas 10A';
     const schedules = getAllSchedules(kelas);
     const uniqueSubjects = [...new Set(schedules.map(s => s.mapel))];
     setSubjects(uniqueSubjects);
@@ -35,18 +36,18 @@ export default function PresensiMapel() {
       const data = getSubjectAttendance(currentUser.id);
       setAttendanceData(data);
     } else {
-      // For guru, get all students and their attendance
+      // For guru, get all students and ALL their attendance using new function
       const allStudents = getStudents();
       setStudents(allStudents);
       
+      // Get all attendance data at once
+      const allAttendance = getAllSubjectAttendance();
+      
       // Create a map of student ID to their attendance
       const attendanceMap = new Map<string, SubjectAttendance[]>();
-      const allAttendance: SubjectAttendance[] = [];
-      
       allStudents.forEach(student => {
-        const studentAttendance = getSubjectAttendance(student.id);
+        const studentAttendance = allAttendance.filter(a => a.userId === student.id);
         attendanceMap.set(student.id, studentAttendance);
-        allAttendance.push(...studentAttendance);
       });
       
       setStudentAttendanceMap(attendanceMap);
@@ -206,11 +207,39 @@ export default function PresensiMapel() {
         {/* GURU VIEW - Full detailed view with student names and stats */}
         {isGuru && (
           <>
+            {/* Overall Statistics Cards */}
+            <div className="grid grid-cols-2 gap-3">
+              <StatCard
+                icon={<Users className="w-6 h-6" />}
+                value={students.length}
+                label="Total Siswa"
+                iconColor="text-primary"
+              />
+              <StatCard
+                icon={<TrendingUp className="w-6 h-6" />}
+                value={`${Math.round((subjectSummary.reduce((acc, s) => acc + s.hadir + s.terlambat, 0) / Math.max(subjectSummary.reduce((acc, s) => acc + s.total, 0), 1)) * 100)}%`}
+                label="Rata-rata Kehadiran"
+                iconColor="text-success"
+              />
+              <StatCard
+                icon={<UserCheck className="w-6 h-6" />}
+                value={subjectSummary.reduce((acc, s) => acc + s.hadir, 0)}
+                label="Total Hadir"
+                iconColor="text-success"
+              />
+              <StatCard
+                icon={<UserX className="w-6 h-6" />}
+                value={subjectSummary.reduce((acc, s) => acc + s.tidakHadir, 0)}
+                label="Total Tidak Hadir"
+                iconColor="text-destructive"
+              />
+            </div>
+
             {/* Subject Summary Cards with Percentage */}
             <div>
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <BookOpen className="w-4 h-4" />
-                Ringkasan Per Mata Pelajaran
+                Ringkasan Per Mata Pelajaran ({subjects.length} Mapel)
               </h3>
               <div className="space-y-3">
                 {subjectSummary.map((summary) => (
