@@ -626,8 +626,28 @@ export const getAnnouncements = (): Announcement[] => {
 
 // Subject Attendance helpers (read-only for students)
 export const getSubjectAttendance = (userId: string): SubjectAttendance[] => {
-  const attendance: SubjectAttendance[] = JSON.parse(localStorage.getItem('subjectAttendance') || '[]');
+  let attendance: SubjectAttendance[] = JSON.parse(localStorage.getItem('subjectAttendance') || '[]');
+  
+  // If localStorage is empty, regenerate and save
+  if (attendance.length === 0) {
+    attendance = generateSubjectAttendance();
+    localStorage.setItem('subjectAttendance', JSON.stringify(attendance));
+  }
+  
   return attendance
     .filter(a => a.userId === userId)
     .sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
+};
+
+// Get all subject attendance (for teachers)
+export const getAllSubjectAttendance = (): SubjectAttendance[] => {
+  let attendance: SubjectAttendance[] = JSON.parse(localStorage.getItem('subjectAttendance') || '[]');
+  
+  // If localStorage is empty, regenerate and save
+  if (attendance.length === 0) {
+    attendance = generateSubjectAttendance();
+    localStorage.setItem('subjectAttendance', JSON.stringify(attendance));
+  }
+  
+  return attendance.sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
 };
