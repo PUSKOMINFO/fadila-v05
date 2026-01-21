@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { getCurrentUser, getUserLeaveRequests, createLeaveRequest, type User, type LeaveRequest } from "@/lib/mockData";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { BottomNav } from "@/components/layout/BottomNav";
 
 export default function Izin() {
   const navigate = useNavigate();
@@ -103,10 +104,22 @@ export default function Izin() {
     });
   };
 
+  const handleNavChange = (tab: string) => {
+    if (user?.role === 'siswa') {
+      if (tab === 'beranda') navigate('/siswa');
+      if (tab === 'riwayat') navigate('/riwayat');
+      if (tab === 'profil') navigate('/profil');
+    } else {
+      if (tab === 'beranda') navigate('/guru');
+      if (tab === 'riwayat') navigate('/riwayat-guru');
+      if (tab === 'profil') navigate('/profil-guru');
+    }
+  };
+
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="bg-gradient-to-br from-warning to-amber-500 px-4 pt-12 pb-6 text-white">
         <div className="flex items-center gap-3 mb-4">
@@ -283,6 +296,12 @@ export default function Izin() {
           </div>
         )}
       </div>
+
+      <BottomNav 
+        activeTab="beranda" 
+        onTabChange={handleNavChange} 
+        role={user.role} 
+      />
     </div>
   );
 }

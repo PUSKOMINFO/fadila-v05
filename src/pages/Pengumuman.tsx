@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Pin, Calendar, User, Megaphone, BookOpen, PartyPopper, AlertCircle } from "lucide-react";
 import { getCurrentUser, getAnnouncements, type User as UserType, type Announcement } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { BottomNav } from "@/components/layout/BottomNav";
 
 type CategoryType = 'semua' | 'umum' | 'akademik' | 'kegiatan' | 'penting';
 
@@ -72,10 +73,22 @@ export default function Pengumuman() {
     });
   };
 
+  const handleNavChange = (tab: string) => {
+    if (user?.role === 'siswa') {
+      if (tab === 'beranda') navigate('/siswa');
+      if (tab === 'riwayat') navigate('/riwayat');
+      if (tab === 'profil') navigate('/profil');
+    } else {
+      if (tab === 'beranda') navigate('/guru');
+      if (tab === 'riwayat') navigate('/riwayat-guru');
+      if (tab === 'profil') navigate('/profil-guru');
+    }
+  };
+
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <div className="bg-gradient-to-br from-destructive to-rose-500 px-4 pt-12 pb-6 text-white">
         <div className="flex items-center gap-3 mb-4">
@@ -181,6 +194,12 @@ export default function Pengumuman() {
           </div>
         )}
       </div>
+
+      <BottomNav 
+        activeTab="beranda" 
+        onTabChange={handleNavChange} 
+        role={user.role} 
+      />
     </div>
   );
 }
