@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, CheckCircle2, AlertCircle, Clock, XCircle, Filter } from "lucide-react";
-import { getCurrentUser, getSubjectAttendance, getAllSchedules, type User, type SubjectAttendance } from "@/lib/mockData";
+import { ArrowLeft, BookOpen, CheckCircle2, AlertCircle, Clock, XCircle, Filter, Users } from "lucide-react";
+import { getCurrentUser, getSubjectAttendance, getAllSchedules, getStudents, type User, type SubjectAttendance } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -12,32 +12,55 @@ export default function PresensiMapel() {
   const [attendanceData, setAttendanceData] = useState<SubjectAttendance[]>([]);
   const [selectedMapel, setSelectedMapel] = useState<string>('semua');
   const [subjects, setSubjects] = useState<string[]>([]);
+  const [students, setStudents] = useState<User[]>([]);
 
   useEffect(() => {
     const currentUser = getCurrentUser();
-    if (!currentUser || currentUser.role !== 'siswa') {
+    if (!currentUser || (currentUser.role !== 'siswa' && currentUser.role !== 'guru')) {
       navigate('/');
       return;
     }
     setUser(currentUser);
 
     // Get all unique subjects from schedules
-    const schedules = getAllSchedules(currentUser.kelas || '');
+    const kelas = currentUser.role === 'siswa' ? (currentUser.kelas || '') : 'XII IPA 1';
+    const schedules = getAllSchedules(kelas);
     const uniqueSubjects = [...new Set(schedules.map(s => s.mapel))];
     setSubjects(uniqueSubjects);
 
-    // Get subject attendance for this student
-    const data = getSubjectAttendance(currentUser.id);
-    setAttendanceData(data);
+    if (currentUser.role === 'siswa') {
+      // Get subject attendance for this student
+      const data = getSubjectAttendance(currentUser.id);
+      setAttendanceData(data);
+    } else {
+      // For guru, get all students and their attendance
+      const allStudents = getStudents();
+      setStudents(allStudents);
+      // Aggregate all students' attendance data
+      const allAttendance: SubjectAttendance[] = [];
+      allStudents.forEach(student => {
+        const studentAttendance = getSubjectAttendance(student.id);
+        allAttendance.push(...studentAttendance);
+      });
+      setAttendanceData(allAttendance);
+    }
   }, [navigate]);
 
   const handleNavChange = (tab: string) => {
-    if (tab === 'beranda') navigate('/siswa');
-    if (tab === 'riwayat') navigate('/riwayat');
-    if (tab === 'profil') navigate('/profil');
+    if (user?.role === 'guru') {
+      if (tab === 'beranda') navigate('/guru');
+      if (tab === 'riwayat') navigate('/riwayat-guru');
+      if (tab === 'profil') navigate('/profil-guru');
+    } else {
+      if (tab === 'beranda') navigate('/siswa');
+      if (tab === 'riwayat') navigate('/riwayat');
+      if (tab === 'profil') navigate('/profil');
+    }
   };
 
   if (!user) return null;
+
+  const isGuru = user.role === 'guru';
 
   // Filter attendance by selected subject
   const filteredAttendance = selectedMapel === 'semua' 
@@ -105,16 +128,32 @@ export default function PresensiMapel() {
       <div className="bg-gradient-to-br from-primary to-primary/80 px-4 pt-12 pb-6 text-primary-foreground">
         <div className="flex items-center gap-3 mb-4">
           <button
-            onClick={() => navigate('/siswa')}
+            onClick={() => navigate(isGuru ? '/guru' : '/siswa')}
             className="p-2 hover:bg-white/20 rounded-full transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-semibold">Presensi Mata Pelajaran</h1>
+          <h1 className="text-lg font-semibold">
+            {isGuru ? 'Presensi Per Mata Pelajaran' : 'Presensi Mata Pelajaran'}
+          </h1>
         </div>
         <p className="text-white/80 text-sm">
-          Data presensi per mata pelajaran yang dikelola oleh guru mapel
+          {isGuru 
+            ? 'Kelola dan lihat rekap kehadiran siswa per mata pelajaran'
+            : 'Data presensi per mata pelajaran yang dikelola oleh guru mapel'}
         </p>
+        {isGuru && (
+          <div className="flex items-center gap-4 mt-4 text-sm">
+            <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full">
+              <Users className="w-4 h-4" />
+              <span>{students.length} Siswa</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full">
+              <BookOpen className="w-4 h-4" />
+              <span>{subjects.length} Mapel</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -270,7 +309,7 @@ export default function PresensiMapel() {
       <BottomNav 
         activeTab="beranda" 
         onTabChange={handleNavChange} 
-        role="siswa" 
+        role={user.role} 
       />
     </div>
   );
