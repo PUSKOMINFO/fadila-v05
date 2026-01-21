@@ -75,6 +75,18 @@ export interface Announcement {
   pinned?: boolean;
 }
 
+// Subject Attendance - managed by teachers
+export interface SubjectAttendance {
+  id: string;
+  userId: string;
+  scheduleId: string;
+  mapel: string;
+  guru: string;
+  tanggal: string;
+  status: 'hadir' | 'terlambat' | 'tidak_hadir' | 'izin' | 'sakit';
+  keterangan?: string;
+}
+
 // Mock Users
 export const mockUsers: User[] = [
   {
@@ -363,6 +375,55 @@ export const mockAnnouncements: Announcement[] = [
   }
 ];
 
+// Mock Subject Attendance - managed by teachers
+const generateSubjectAttendance = (): SubjectAttendance[] => {
+  const schedules = mockSchedules.filter(s => s.kelas === 'Kelas 10A');
+  const students = mockUsers.filter(u => u.role === 'siswa');
+  const attendance: SubjectAttendance[] = [];
+  
+  // Generate attendance for the last 2 weeks
+  for (let daysAgo = 0; daysAgo < 14; daysAgo++) {
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const dayName = days[date.getDay()];
+    
+    // Skip weekends
+    if (dayName === 'Minggu' || dayName === 'Sabtu') continue;
+    
+    const daySchedules = schedules.filter(s => s.hari === dayName);
+    
+    for (const schedule of daySchedules) {
+      for (const student of students) {
+        // Random status with weighted probability
+        const rand = Math.random();
+        let status: SubjectAttendance['status'];
+        if (rand < 0.75) status = 'hadir';
+        else if (rand < 0.85) status = 'terlambat';
+        else if (rand < 0.92) status = 'tidak_hadir';
+        else if (rand < 0.96) status = 'izin';
+        else status = 'sakit';
+        
+        attendance.push({
+          id: `SA${Date.now()}_${student.id}_${schedule.id}_${daysAgo}`,
+          userId: student.id,
+          scheduleId: schedule.id,
+          mapel: schedule.mapel,
+          guru: schedule.guru,
+          tanggal: date.toISOString().split('T')[0],
+          status,
+          keterangan: status === 'sakit' ? 'Surat keterangan dokter' : 
+                     status === 'izin' ? 'Keperluan keluarga' : undefined
+        });
+      }
+    }
+  }
+  
+  return attendance;
+};
+
+export const mockSubjectAttendance: SubjectAttendance[] = generateSubjectAttendance();
+
 // Initialize localStorage with mock data
 export const initializeMockData = () => {
   if (!localStorage.getItem('users')) {
@@ -385,6 +446,9 @@ export const initializeMockData = () => {
   }
   if (!localStorage.getItem('announcements')) {
     localStorage.setItem('announcements', JSON.stringify(mockAnnouncements));
+  }
+  if (!localStorage.getItem('subjectAttendance')) {
+    localStorage.setItem('subjectAttendance', JSON.stringify(mockSubjectAttendance));
   }
 };
 
@@ -558,4 +622,12 @@ export const getAnnouncements = (): Announcement[] => {
     if (!a.pinned && b.pinned) return 1;
     return new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime();
   });
+};
+
+// Subject Attendance helpers (read-only for students)
+export const getSubjectAttendance = (userId: string): SubjectAttendance[] => {
+  const attendance: SubjectAttendance[] = JSON.parse(localStorage.getItem('subjectAttendance') || '[]');
+  return attendance
+    .filter(a => a.userId === userId)
+    .sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
 };

@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import SiswaDashboard from "./pages/SiswaDashboard";
 import GuruDashboard from "./pages/GuruDashboard";
 import JadwalMapel from "./pages/JadwalMapel";
+import PresensiMapel from "./pages/PresensiMapel";
 import Izin from "./pages/Izin";
 import Perpustakaan from "./pages/Perpustakaan";
 import Pengumuman from "./pages/Pengumuman";
@@ -32,6 +33,7 @@ function AppContent() {
         <Route path="/siswa" element={<SiswaDashboard />} />
         <Route path="/guru" element={<GuruDashboard />} />
         <Route path="/jadwal" element={<JadwalMapel />} />
+        <Route path="/presensi-mapel" element={<PresensiMapel />} />
         <Route path="/izin" element={<Izin />} />
         <Route path="/perpustakaan" element={<Perpustakaan />} />
         <Route path="/pengumuman" element={<Pengumuman />} />
