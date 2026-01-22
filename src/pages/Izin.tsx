@@ -95,7 +95,7 @@ export default function Izin() {
   const filteredRequests = requests.filter(r => {
     const matchesTab = activeTab === 'all' || r.status === activeTab;
     const matchesSearch = user?.role === 'guru' 
-      ? r.namaSiswa.toLowerCase().includes(searchQuery.toLowerCase())
+      ? (r.namaSiswa || '').toLowerCase().includes(searchQuery.toLowerCase())
       : true;
     return matchesTab && matchesSearch;
   });
