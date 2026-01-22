@@ -15,6 +15,7 @@ import Riwayat from "./pages/Riwayat";
 import Profil from "./pages/Profil";
 import RiwayatGuru from "./pages/RiwayatGuru";
 import ProfilGuru from "./pages/ProfilGuru";
+import DaftarSiswa from "./pages/DaftarSiswa";
 import NotFound from "./pages/NotFound";
 import { initializeMockData } from "./lib/mockData";
 import { useEffect } from "react";
@@ -41,6 +42,7 @@ function AppContent() {
         <Route path="/profil" element={<Profil />} />
         <Route path="/riwayat-guru" element={<RiwayatGuru />} />
         <Route path="/profil-guru" element={<ProfilGuru />} />
+        <Route path="/daftar-siswa" element={<DaftarSiswa />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

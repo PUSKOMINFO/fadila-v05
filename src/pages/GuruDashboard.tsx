@@ -47,7 +47,7 @@ export default function GuruDashboard() {
     { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
     { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
     { icon: <ClipboardEdit className="w-6 h-6" />, label: 'Kelola Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/riwayat-guru' },
-    { icon: <Users className="w-6 h-6" />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/riwayat-guru' },
+    { icon: <Users className="w-6 h-6" />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/daftar-siswa' },
   ];
 
   // Calculate stats
