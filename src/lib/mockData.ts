@@ -37,12 +37,17 @@ export interface Schedule {
 export interface LeaveRequest {
   id: string;
   userId: string;
+  namaSiswa: string;
+  kelas: string;
   tanggalMulai: string;
   tanggalSelesai: string;
   jenis: 'izin' | 'sakit';
   alasan: string;
   status: 'pending' | 'approved' | 'rejected';
   createdAt: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  catatanGuru?: string;
 }
 
 export interface Book {
@@ -222,27 +227,89 @@ export const mockSchedules: Schedule[] = [
   { id: 'SCH019', hari: 'Jumat', jamMulai: '10:15', jamSelesai: '11:30', mapel: 'BK', guru: 'Ibu Lestari', kelas: 'Kelas 10A', ruangan: 'R.BK' },
 ];
 
-// Mock Leave Requests
+// Mock Leave Requests - with comprehensive seed data
 export const mockLeaveRequests: LeaveRequest[] = [
   {
     id: 'LR001',
     userId: 'STU001',
-    tanggalMulai: '2026-01-15',
-    tanggalSelesai: '2026-01-15',
+    namaSiswa: 'Fadhila Asla Shana',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-20',
+    tanggalSelesai: '2026-01-21',
     jenis: 'sakit',
-    alasan: 'Demam tinggi, istirahat di rumah atas saran dokter',
-    status: 'approved',
-    createdAt: '2026-01-14T10:00:00Z'
+    alasan: 'Demam tinggi dan flu, perlu istirahat atas saran dokter',
+    status: 'pending',
+    createdAt: '2026-01-19T08:00:00Z'
   },
   {
     id: 'LR002',
-    userId: 'STU001',
-    tanggalMulai: '2026-01-10',
-    tanggalSelesai: '2026-01-10',
+    userId: 'STU002',
+    namaSiswa: 'Rizki Pratama',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-22',
+    tanggalSelesai: '2026-01-22',
     jenis: 'izin',
-    alasan: 'Menghadiri acara keluarga',
+    alasan: 'Menghadiri acara pernikahan saudara di luar kota',
+    status: 'pending',
+    createdAt: '2026-01-18T10:30:00Z'
+  },
+  {
+    id: 'LR003',
+    userId: 'STU003',
+    namaSiswa: 'Sari Indah',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-15',
+    tanggalSelesai: '2026-01-16',
+    jenis: 'sakit',
+    alasan: 'Sakit perut, berobat ke dokter',
     status: 'approved',
-    createdAt: '2026-01-09T08:00:00Z'
+    createdAt: '2026-01-14T07:30:00Z',
+    reviewedBy: 'TEA001',
+    reviewedAt: '2026-01-14T09:00:00Z',
+    catatanGuru: 'Segera sembuh ya'
+  },
+  {
+    id: 'LR004',
+    userId: 'STU004',
+    namaSiswa: 'Ahmad Fauzi',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-18',
+    tanggalSelesai: '2026-01-18',
+    jenis: 'izin',
+    alasan: 'Keperluan keluarga mendesak',
+    status: 'approved',
+    createdAt: '2026-01-17T14:00:00Z',
+    reviewedBy: 'TEA001',
+    reviewedAt: '2026-01-17T15:30:00Z'
+  },
+  {
+    id: 'LR005',
+    userId: 'STU005',
+    namaSiswa: 'Maya Sinta',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-10',
+    tanggalSelesai: '2026-01-12',
+    jenis: 'izin',
+    alasan: 'Mengikuti lomba tingkat provinsi',
+    status: 'rejected',
+    createdAt: '2026-01-08T09:00:00Z',
+    reviewedBy: 'TEA001',
+    reviewedAt: '2026-01-08T11:00:00Z',
+    catatanGuru: 'Tidak ada surat tugas dari panitia lomba'
+  },
+  {
+    id: 'LR006',
+    userId: 'STU001',
+    namaSiswa: 'Fadhila Asla Shana',
+    kelas: 'Kelas 10A',
+    tanggalMulai: '2026-01-05',
+    tanggalSelesai: '2026-01-05',
+    jenis: 'izin',
+    alasan: 'Mengurus administrasi di kelurahan',
+    status: 'approved',
+    createdAt: '2026-01-04T08:00:00Z',
+    reviewedBy: 'TEA001',
+    reviewedAt: '2026-01-04T10:00:00Z'
   }
 ];
 
@@ -534,6 +601,13 @@ export const getUserLeaveRequests = (userId: string): LeaveRequest[] => {
   );
 };
 
+export const getAllLeaveRequests = (): LeaveRequest[] => {
+  const requests: LeaveRequest[] = JSON.parse(localStorage.getItem('leaveRequests') || '[]');
+  return requests.sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+};
+
 export const createLeaveRequest = (data: Omit<LeaveRequest, 'id' | 'status' | 'createdAt'>): LeaveRequest => {
   const requests: LeaveRequest[] = JSON.parse(localStorage.getItem('leaveRequests') || '[]');
   const newRequest: LeaveRequest = {
@@ -545,6 +619,29 @@ export const createLeaveRequest = (data: Omit<LeaveRequest, 'id' | 'status' | 'c
   requests.push(newRequest);
   localStorage.setItem('leaveRequests', JSON.stringify(requests));
   return newRequest;
+};
+
+export const updateLeaveRequestStatus = (
+  requestId: string, 
+  status: 'approved' | 'rejected', 
+  reviewedBy: string,
+  catatanGuru?: string
+): LeaveRequest | null => {
+  const requests: LeaveRequest[] = JSON.parse(localStorage.getItem('leaveRequests') || '[]');
+  const index = requests.findIndex(r => r.id === requestId);
+  
+  if (index >= 0) {
+    requests[index] = {
+      ...requests[index],
+      status,
+      reviewedBy,
+      reviewedAt: new Date().toISOString(),
+      catatanGuru
+    };
+    localStorage.setItem('leaveRequests', JSON.stringify(requests));
+    return requests[index];
+  }
+  return null;
 };
 
 // Book helpers
