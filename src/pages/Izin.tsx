@@ -337,12 +337,12 @@ export default function Izin() {
               {isGuru && (
                 <div className="flex items-center gap-3 mb-3 pb-3 border-b border-border">
                   <Avatar className="w-10 h-10">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${request.namaSiswa}`} />
-                    <AvatarFallback>{request.namaSiswa.split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback>
+                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${request.namaSiswa || 'default'}`} />
+                    <AvatarFallback>{(request.namaSiswa || 'S').split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <p className="font-semibold text-foreground">{request.namaSiswa}</p>
-                    <p className="text-xs text-muted-foreground">{request.kelas}</p>
+                    <p className="font-semibold text-foreground">{request.namaSiswa || 'Siswa'}</p>
+                    <p className="text-xs text-muted-foreground">{request.kelas || '-'}</p>
                   </div>
                   {request.status === 'pending' && (
                     <span className="text-xs text-primary font-medium">Tap untuk review →</span>
@@ -427,12 +427,12 @@ export default function Izin() {
               {/* Student Info */}
               <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
                 <Avatar className="w-12 h-12">
-                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedRequest.namaSiswa}`} />
-                  <AvatarFallback>{selectedRequest.namaSiswa.split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback>
+                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedRequest.namaSiswa || 'default'}`} />
+                  <AvatarFallback>{(selectedRequest.namaSiswa || 'S').split(' ').map(n => n[0]).join('').slice(0, 2)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-semibold">{selectedRequest.namaSiswa}</p>
-                  <p className="text-sm text-muted-foreground">{selectedRequest.kelas}</p>
+                  <p className="font-semibold">{selectedRequest.namaSiswa || 'Siswa'}</p>
+                  <p className="text-sm text-muted-foreground">{selectedRequest.kelas || '-'}</p>
                 </div>
               </div>
 
