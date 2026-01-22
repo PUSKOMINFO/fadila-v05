@@ -721,6 +721,41 @@ export const getAnnouncements = (): Announcement[] => {
   });
 };
 
+export const createAnnouncement = (data: Omit<Announcement, 'id' | 'tanggal'>): Announcement => {
+  const announcements: Announcement[] = JSON.parse(localStorage.getItem('announcements') || '[]');
+  const newAnnouncement: Announcement = {
+    ...data,
+    id: `ANN${Date.now()}`,
+    tanggal: new Date().toISOString().split('T')[0]
+  };
+  announcements.unshift(newAnnouncement);
+  localStorage.setItem('announcements', JSON.stringify(announcements));
+  return newAnnouncement;
+};
+
+export const updateAnnouncement = (id: string, data: Partial<Omit<Announcement, 'id' | 'tanggal'>>): Announcement | null => {
+  const announcements: Announcement[] = JSON.parse(localStorage.getItem('announcements') || '[]');
+  const index = announcements.findIndex(a => a.id === id);
+  
+  if (index >= 0) {
+    announcements[index] = { ...announcements[index], ...data };
+    localStorage.setItem('announcements', JSON.stringify(announcements));
+    return announcements[index];
+  }
+  return null;
+};
+
+export const deleteAnnouncement = (id: string): boolean => {
+  const announcements: Announcement[] = JSON.parse(localStorage.getItem('announcements') || '[]');
+  const filtered = announcements.filter(a => a.id !== id);
+  
+  if (filtered.length < announcements.length) {
+    localStorage.setItem('announcements', JSON.stringify(filtered));
+    return true;
+  }
+  return false;
+};
+
 // Subject Attendance helpers (read-only for students)
 export const getSubjectAttendance = (userId: string): SubjectAttendance[] => {
   let attendance: SubjectAttendance[] = JSON.parse(localStorage.getItem('subjectAttendance') || '[]');
