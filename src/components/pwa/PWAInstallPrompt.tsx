@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Download, Smartphone, Monitor, Tablet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import logoSMA from "@/assets/logo-sma-mayong.jpg";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -113,8 +114,8 @@ export function PWAInstallPrompt() {
           </button>
           
           <div className="relative">
-            <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4">
-              <Download className="w-8 h-8" />
+            <div className="w-16 h-16 rounded-2xl bg-white backdrop-blur-sm flex items-center justify-center mb-4 shadow-lg overflow-hidden">
+              <img src={logoSMA} alt="Logo SMAN 1 Mayong" className="w-12 h-12 object-contain" />
             </div>
             <h2 className="text-xl font-bold">Install Aplikasi</h2>
             <p className="text-white/80 text-sm mt-1">
