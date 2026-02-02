@@ -18,6 +18,7 @@ import ProfilGuru from "./pages/ProfilGuru";
 import DaftarSiswa from "./pages/DaftarSiswa";
 import Analitik from "./pages/Analitik";
 import NotFound from "./pages/NotFound";
+import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
 import { initializeMockData } from "./lib/mockData";
 import { useEffect } from "react";
 
@@ -56,6 +57,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner position="top-center" />
+      <PWAInstallPrompt />
       <AppContent />
     </TooltipProvider>
   </QueryClientProvider>
