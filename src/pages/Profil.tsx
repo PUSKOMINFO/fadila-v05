@@ -197,15 +197,6 @@ export default function Profil() {
           <h3 className="font-semibold text-foreground p-4 border-b border-border">Pengaturan</h3>
           <div className="divide-y divide-border">
             <button 
-              onClick={() => navigate('/riwayat')}
-              className="w-full flex items-center gap-4 p-4 hover:bg-muted transition-colors"
-            >
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-primary" />
-              </div>
-              <span className="font-medium text-foreground">Lihat Riwayat Presensi</span>
-            </button>
-            <button 
               onClick={handleLogout}
               className="w-full flex items-center gap-4 p-4 hover:bg-muted transition-colors text-destructive"
             >
