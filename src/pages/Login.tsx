@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { login, initializeMockData } from "@/lib/mockData";
 import { toast } from "sonner";
+import logoSMA from "@/assets/logo-sma-mayong.jpg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -57,8 +58,8 @@ export default function Login() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="gradient-hero px-6 pt-12 pb-16 text-center text-white">
-        <div className="w-16 h-16 bg-white/20 rounded-2xl mx-auto mb-4 flex items-center justify-center backdrop-blur-sm">
-          <GraduationCap className="w-8 h-8" />
+        <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg overflow-hidden">
+          <img src={logoSMA} alt="Logo SMAN 1 Mayong" className="w-16 h-16 object-contain" />
         </div>
         <h1 className="text-2xl font-bold mb-1">Presensi Digital</h1>
         <p className="text-white/80 text-sm">SMAN 1 Mayong Jepara</p>

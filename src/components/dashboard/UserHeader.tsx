@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/lib/mockData";
+import logoSMA from "@/assets/logo-sma-mayong.jpg";
 
 interface UserHeaderProps {
   user: User;
@@ -12,12 +13,9 @@ export function UserHeader({ user, onLogout }: UserHeaderProps) {
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-card">
       <div className="flex items-center gap-3">
-        <Avatar className="w-11 h-11 border-2 border-primary/20">
-          <AvatarImage src={user.avatar} alt={user.nama} />
-          <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
+        <div className="w-11 h-11 rounded-full bg-white border-2 border-primary/20 flex items-center justify-center overflow-hidden">
+          <img src={logoSMA} alt="Logo SMAN 1 Mayong" className="w-8 h-8 object-contain" />
+        </div>
         <div>
           <h2 className="font-semibold text-foreground">{user.nama}</h2>
           <p className="text-xs text-muted-foreground">
