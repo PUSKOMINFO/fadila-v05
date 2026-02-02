@@ -783,3 +783,8 @@ export const getAllSubjectAttendance = (): SubjectAttendance[] => {
   
   return attendance.sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
 };
+
+// Get all attendance records (for analytics)
+export const getAllAttendance = (): AttendanceRecord[] => {
+  return JSON.parse(localStorage.getItem('attendance') || '[]');
+};

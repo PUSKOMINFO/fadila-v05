@@ -334,7 +334,7 @@ export default function RiwayatGuru() {
 
       <BottomNav activeTab="riwayat" onTabChange={(tab) => {
         if (tab === 'beranda') navigate('/guru');
-        if (tab === 'analitik') navigate('/guru');
+        if (tab === 'analitik') navigate('/analitik');
         if (tab === 'profil') navigate('/profil-guru');
       }} role="guru" />
     </div>
