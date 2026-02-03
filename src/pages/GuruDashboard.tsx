@@ -261,7 +261,7 @@ export default function GuruDashboard() {
       <BottomNav activeTab={activeTab} onTabChange={(tab) => {
         setActiveTab(tab);
         if (tab === 'analitik') navigate('/analitik');
-        if (tab === 'riwayat') navigate('/riwayat-guru');
+        if (tab === 'riwayat') navigate('/kelola-presensi');
         if (tab === 'profil') navigate('/profil-guru');
       }} role="guru" />
     </div>

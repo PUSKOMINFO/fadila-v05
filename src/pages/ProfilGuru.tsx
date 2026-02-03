@@ -223,7 +223,7 @@ export default function ProfilGuru() {
       <BottomNav activeTab="profil" onTabChange={(tab) => {
         if (tab === 'beranda') navigate('/guru');
         if (tab === 'analitik') navigate('/analitik');
-        if (tab === 'riwayat') navigate('/riwayat-guru');
+        if (tab === 'riwayat') navigate('/kelola-presensi');
       }} role="guru" />
     </div>
   );
