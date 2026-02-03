@@ -176,6 +176,7 @@ export default function Pengumuman() {
       if (tab === 'profil') navigate('/profil');
     } else {
       if (tab === 'beranda') navigate('/guru');
+      if (tab === 'analitik') navigate('/analitik');
       if (tab === 'riwayat') navigate('/riwayat-guru');
       if (tab === 'profil') navigate('/profil-guru');
     }
