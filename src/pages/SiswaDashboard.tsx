@@ -68,7 +68,7 @@ export default function SiswaDashboard() {
   ];
 
   const quickActions = [
-    { icon: <ClipboardEdit className="w-5 h-5" />, label: 'Ajukan Koreksi Presensi', path: '/izin' },
+    { icon: <ClipboardEdit className="w-5 h-5" />, label: 'Ajukan Koreksi Presensi', path: '/koreksi-presensi' },
     { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Lihat Presensi Mapel', path: '/presensi-mapel' },
   ];
 
