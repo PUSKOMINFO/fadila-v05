@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, MapPin, User, BookOpen } from "lucide-react";
 import { getCurrentUser, getAllSchedules, type User as UserType, type Schedule } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
-
+import {
+  ArrowLeftIcon,
+  ClockIcon,
+  MapPinIcon,
+  UserCircleIcon,
+  BookIcon
+} from "@/components/icons/FlatIcons";
 const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 
 export default function JadwalMapel() {
@@ -73,7 +78,7 @@ export default function JadwalMapel() {
             onClick={() => navigate(-1)}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeftIcon size={20} />
           </button>
           <div>
             <h1 className="text-xl font-bold">
@@ -122,13 +127,13 @@ export default function JadwalMapel() {
                     <div>
                       <h3 className="font-semibold text-foreground">{schedule.mapel}</h3>
                       <div className="flex items-center gap-1.5 mt-1 text-muted-foreground">
-                        <User className="w-3.5 h-3.5" />
+                        <UserCircleIcon size={14} />
                         <span className="text-sm">{schedule.guru}</span>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="flex items-center gap-1.5 text-primary font-medium">
-                        <Clock className="w-4 h-4" />
+                        <ClockIcon size={16} />
                         <span className="text-sm">{schedule.jamMulai}</span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-0.5">
@@ -139,7 +144,7 @@ export default function JadwalMapel() {
                   
                   {schedule.ruangan && (
                     <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-border">
-                      <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
+                      <MapPinIcon size={14} />
                       <span className="text-sm text-muted-foreground">{schedule.ruangan}</span>
                     </div>
                   )}
@@ -150,7 +155,7 @@ export default function JadwalMapel() {
         ) : (
           <div className="bg-card rounded-xl border border-border p-8 text-center">
             <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
-              <BookOpen className="w-8 h-8 text-muted-foreground" />
+              <BookIcon size={32} />
             </div>
             <p className="font-medium text-foreground">Tidak Ada Jadwal</p>
             <p className="text-sm text-muted-foreground mt-1">

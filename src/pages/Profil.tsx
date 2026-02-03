@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Mail, Phone, MapPin, Calendar, Edit2, Save, X, LogOut, GraduationCap, BookOpen, User as UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser, logout, getUserAttendance, type User } from "@/lib/mockData";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
+import {
+  ArrowLeftIcon,
+  MailIcon,
+  GraduationCapIcon,
+  UserCircleIcon,
+  EditIcon,
+  SaveIcon,
+  XIcon,
+  LogOutIcon,
+  BookIcon
+} from "@/components/icons/FlatIcons";
 
 export default function Profil() {
   const navigate = useNavigate();
@@ -66,19 +76,19 @@ export default function Profil() {
 
   const infoItems = [
     { 
-      icon: <Mail className="w-4 h-4" />, 
+      icon: <MailIcon size={16} />, 
       label: 'Email', 
       value: user.email,
       editable: false 
     },
     { 
-      icon: user.role === 'siswa' ? <GraduationCap className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />, 
+      icon: user.role === 'siswa' ? <GraduationCapIcon size={16} /> : <BookIcon size={16} />, 
       label: user.role === 'siswa' ? 'NIS' : 'NIP', 
       value: user.role === 'siswa' ? user.nis : user.nip,
       editable: false 
     },
     { 
-      icon: <UserIcon className="w-4 h-4" />, 
+      icon: <UserCircleIcon size={16} />, 
       label: user.role === 'siswa' ? 'Kelas' : 'Mata Pelajaran', 
       value: user.role === 'siswa' ? user.kelas : user.mapel,
       editable: false 
@@ -94,7 +104,7 @@ export default function Profil() {
             onClick={() => navigate(-1)}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeftIcon size={20} />
           </button>
           <h1 className="text-xl font-bold">Profil</h1>
           {!isEditing ? (
@@ -102,7 +112,7 @@ export default function Profil() {
               onClick={() => setIsEditing(true)}
               className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
             >
-              <Edit2 className="w-5 h-5" />
+              <EditIcon size={20} />
             </button>
           ) : (
             <div className="flex gap-2">
@@ -110,13 +120,13 @@ export default function Profil() {
                 onClick={handleCancel}
                 className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
               >
-                <X className="w-5 h-5" />
+                <XIcon size={20} />
               </button>
               <button
                 onClick={handleSave}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
               >
-                <Save className="w-5 h-5 text-accent" />
+                <SaveIcon size={20} />
               </button>
             </div>
           )}
@@ -201,7 +211,7 @@ export default function Profil() {
               className="w-full flex items-center gap-4 p-4 hover:bg-muted transition-colors text-destructive"
             >
               <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                <LogOut className="w-5 h-5" />
+                <LogOutIcon size={20} />
               </div>
               <span className="font-medium">Keluar</span>
             </button>

@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock, AlertCircle } from "lucide-react";
 import { getCurrentUser, getUserAttendance, type User, type AttendanceRecord } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { 
+  ArrowLeftIcon, 
+  PresentIcon, 
+  LateIcon, 
+  AbsentIcon, 
+  InfoIcon,
+  ChevronRightIcon
+} from "@/components/icons/FlatIcons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MONTHS = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -45,20 +53,20 @@ export default function Riwayat() {
     switch (status) {
       case 'hadir': return 'bg-success text-white';
       case 'terlambat': return 'bg-warning text-white';
-      case 'tidak_hadir': return 'bg-destructive text-white'; // MERAH - Tidak Hadir
-      case 'izin': return 'bg-blue-500 text-white'; // BIRU - Izin (berbeda dari primary/ungu)
-      case 'sakit': return 'bg-orange-500 text-white'; // ORANYE - Sakit
+      case 'tidak_hadir': return 'bg-destructive text-white';
+      case 'izin': return 'bg-blue-500 text-white';
+      case 'sakit': return 'bg-orange-500 text-white';
       default: return 'bg-muted text-muted-foreground';
     }
   };
 
   const getStatusIcon = (status: AttendanceRecord['status']) => {
     switch (status) {
-      case 'hadir': return <CheckCircle2 className="w-4 h-4" />;
-      case 'terlambat': return <Clock className="w-4 h-4" />;
-      case 'tidak_hadir': return <XCircle className="w-4 h-4" />;
+      case 'hadir': return <PresentIcon size={16} />;
+      case 'terlambat': return <LateIcon size={16} />;
+      case 'tidak_hadir': return <AbsentIcon size={16} />;
       case 'izin': 
-      case 'sakit': return <AlertCircle className="w-4 h-4" />;
+      case 'sakit': return <InfoIcon size={16} />;
       default: return null;
     }
   };
@@ -119,7 +127,7 @@ export default function Riwayat() {
             onClick={() => navigate(-1)}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeftIcon size={20} />
           </button>
           <div>
             <h1 className="text-xl font-bold">Riwayat Presensi</h1>

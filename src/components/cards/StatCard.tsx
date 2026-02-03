@@ -15,7 +15,7 @@ export function StatCard({ icon, value, label, iconColor = "text-primary", class
       "bg-card rounded-xl p-4 border border-border shadow-sm",
       className
     )}>
-      <div className={cn("flex justify-center mb-2", iconColor)}>
+      <div className="flex justify-center mb-2">
         {icon}
       </div>
       <div className="text-center">

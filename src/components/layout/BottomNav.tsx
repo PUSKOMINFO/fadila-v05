@@ -1,5 +1,5 @@
-import { Home, BarChart3, Calendar, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HomeIcon, AnalyticsIcon, CalendarManageIcon, ProfileIcon, HistoryIcon } from "@/components/icons/FlatIcons";
 
 interface BottomNavProps {
   activeTab: string;
@@ -10,15 +10,15 @@ interface BottomNavProps {
 export function BottomNav({ activeTab, onTabChange, role }: BottomNavProps) {
   const tabs = role === 'guru' 
     ? [
-        { id: 'beranda', label: 'Beranda', icon: Home },
-        { id: 'analitik', label: 'Analitik', icon: BarChart3 },
-        { id: 'riwayat', label: 'Kelola', icon: Calendar },
-        { id: 'profil', label: 'Profil', icon: User },
+        { id: 'beranda', label: 'Beranda', icon: HomeIcon },
+        { id: 'analitik', label: 'Analitik', icon: AnalyticsIcon },
+        { id: 'riwayat', label: 'Kelola', icon: CalendarManageIcon },
+        { id: 'profil', label: 'Profil', icon: ProfileIcon },
       ]
     : [
-        { id: 'beranda', label: 'Beranda', icon: Home },
-        { id: 'riwayat', label: 'Riwayat', icon: Calendar },
-        { id: 'profil', label: 'Profil', icon: User },
+        { id: 'beranda', label: 'Beranda', icon: HomeIcon },
+        { id: 'riwayat', label: 'Riwayat', icon: HistoryIcon },
+        { id: 'profil', label: 'Profil', icon: ProfileIcon },
       ];
 
   return (
@@ -35,12 +35,15 @@ export function BottomNav({ activeTab, onTabChange, role }: BottomNavProps) {
               className={cn(
                 "flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all duration-200",
                 isActive 
-                  ? "bg-primary text-primary-foreground" 
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-primary/10 scale-105" 
+                  : "text-muted-foreground hover:text-foreground opacity-60 hover:opacity-100"
               )}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{tab.label}</span>
+              <Icon size={22} />
+              <span className={cn(
+                "text-xs font-medium",
+                isActive ? "text-primary" : "text-muted-foreground"
+              )}>{tab.label}</span>
             </button>
           );
         })}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, TrendingUp, TrendingDown, Users, Calendar, Clock, CheckCircle2, XCircle, AlertCircle, BarChart3, PieChart } from "lucide-react";
 import { getCurrentUser, getStudents, getAllAttendance, type User, type AttendanceRecord } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -10,6 +9,17 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart as RechartPie, Pie, Cell, LineChart, Line, CartesianGrid, Legend, Tooltip } from "recharts";
+import {
+  ArrowLeftIcon,
+  PresentIcon,
+  LateIcon,
+  AbsentIcon,
+  UsersIcon,
+  TrendUpIcon,
+  AnalyticsIcon,
+  AlertIcon
+} from "@/components/icons/FlatIcons";
+import { TrendingUp, TrendingDown, BarChart3, PieChart } from "lucide-react";
 
 const DAYS = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum'];
 
@@ -76,40 +86,36 @@ export default function Analitik() {
 
   const statCards = [
     {
-      icon: <CheckCircle2 className="w-5 h-5" />,
+      icon: <PresentIcon size={24} />,
       label: 'Tingkat Kehadiran',
       value: `${attendanceRate}%`,
       trend: '+2.5%',
       trendUp: true,
       bgColor: 'bg-success/10',
-      iconColor: 'text-success',
     },
     {
-      icon: <Clock className="w-5 h-5" />,
+      icon: <LateIcon size={24} />,
       label: 'Tingkat Keterlambatan',
       value: `${lateRate}%`,
       trend: '-1.2%',
       trendUp: false,
       bgColor: 'bg-warning/10',
-      iconColor: 'text-warning',
     },
     {
-      icon: <XCircle className="w-5 h-5" />,
+      icon: <AbsentIcon size={24} />,
       label: 'Tingkat Ketidakhadiran',
       value: `${absentRate}%`,
       trend: '-0.8%',
       trendUp: false,
       bgColor: 'bg-destructive/10',
-      iconColor: 'text-destructive',
     },
     {
-      icon: <Users className="w-5 h-5" />,
+      icon: <UsersIcon size={24} />,
       label: 'Total Siswa',
       value: totalStudents.toString(),
       trend: '0',
       trendUp: true,
       bgColor: 'bg-primary/10',
-      iconColor: 'text-primary',
     },
   ];
 
@@ -135,7 +141,7 @@ export default function Analitik() {
             onClick={() => navigate('/guru')}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeftIcon size={20} />
           </button>
           <div>
             <h1 className="text-xl font-bold">Analitik Kehadiran</h1>
@@ -180,7 +186,7 @@ export default function Analitik() {
               className="bg-card rounded-xl border border-border p-4"
             >
               <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center mb-3", stat.bgColor)}>
-                <span className={stat.iconColor}>{stat.icon}</span>
+                {stat.icon}
               </div>
               <p className="text-2xl font-bold text-foreground">{stat.value}</p>
               <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
@@ -205,7 +211,7 @@ export default function Analitik() {
         <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-primary" />
+              <AnalyticsIcon size={20} />
               <h3 className="font-semibold text-foreground">Kehadiran Mingguan</h3>
             </div>
           </div>
@@ -297,7 +303,7 @@ export default function Analitik() {
         {activeView === 'bulanan' && (
           <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-primary" />
+              <TrendUpIcon size={20} />
               <h3 className="font-semibold text-foreground">Tren Bulanan</h3>
             </div>
             <div className="h-48">
@@ -368,7 +374,7 @@ export default function Analitik() {
             {needsAttention.map((student) => (
               <div key={student.id} className="flex items-center gap-3 p-3 bg-destructive/5 rounded-lg border border-destructive/20">
                 <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                  <AlertCircle className="w-5 h-5 text-destructive" />
+                  <AlertIcon size={20} />
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-foreground text-sm">{student.nama}</p>
