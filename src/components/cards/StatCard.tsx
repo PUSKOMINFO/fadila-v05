@@ -12,16 +12,14 @@ interface StatCardProps {
 export function StatCard({ icon, value, label, iconColor = "text-primary", className }: StatCardProps) {
   return (
     <div className={cn(
-      "bg-card rounded-xl p-4 border border-border shadow-sm",
+      "bg-card rounded-xl p-3 border border-border shadow-sm",
       className
     )}>
-      <div className="flex justify-center mb-2">
+      <div className="flex items-center justify-center gap-2 mb-1">
         {icon}
+        <p className="text-xl font-bold text-foreground">{value}</p>
       </div>
-      <div className="text-center">
-        <p className="text-2xl font-bold text-foreground">{value}</p>
-        <p className="text-xs text-muted-foreground mt-1">{label}</p>
-      </div>
+      <p className="text-xs text-muted-foreground text-center">{label}</p>
     </div>
   );
 }
