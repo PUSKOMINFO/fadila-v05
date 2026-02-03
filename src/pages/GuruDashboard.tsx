@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, FileText, Library, Bell, ClipboardEdit, Users, TrendingUp, Clock, CalendarDays, Download, Calendar, Search, CheckCircle2 } from "lucide-react";
+import { BookOpen, FileText, Library, Bell, ClipboardEdit, Users, TrendingUp, Clock, CalendarDays, Download, Calendar, Search, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -8,7 +8,7 @@ import { UserHeader } from "@/components/dashboard/UserHeader";
 import { StatCard } from "@/components/cards/StatCard";
 import { FeatureCard } from "@/components/cards/FeatureCard";
 import { AttendanceListItem } from "@/components/cards/AttendanceListItem";
-import { getCurrentUser, logout, getStudents, getTodayAttendance, type User, type AttendanceRecord } from "@/lib/mockData";
+import { getCurrentUser, logout, getStudents, getTodayAttendance, getPendingCorrectionCount, getPendingLeaveCount, type User, type AttendanceRecord } from "@/lib/mockData";
 import { toast } from "sonner";
 
 export default function GuruDashboard() {
@@ -18,6 +18,8 @@ export default function GuruDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [students, setStudents] = useState<User[]>([]);
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
+  const [pendingCorrectionCount, setPendingCorrectionCount] = useState(0);
+  const [pendingLeaveCount, setPendingLeaveCount] = useState(0);
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -31,6 +33,10 @@ export default function GuruDashboard() {
     const allStudents = getStudents();
     setStudents(allStudents);
     setAttendanceRecords(getTodayAttendance());
+    
+    // Load pending counts for notifications
+    setPendingCorrectionCount(getPendingCorrectionCount());
+    setPendingLeaveCount(getPendingLeaveCount());
   }, [navigate]);
 
   const handleLogout = () => {
@@ -43,10 +49,10 @@ export default function GuruDashboard() {
 
   const features = [
     { icon: <BookOpen className="w-6 h-6" />, label: 'Jadwal Mengajar', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/jadwal' },
-    { icon: <FileText className="w-6 h-6" />, label: 'Izin Siswa', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin' },
+    { icon: <FileText className="w-6 h-6" />, label: 'Izin Siswa', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin', badge: pendingLeaveCount },
     { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
     { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
-    { icon: <ClipboardEdit className="w-6 h-6" />, label: 'Kelola Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/riwayat-guru' },
+    { icon: <ClipboardEdit className="w-6 h-6" />, label: 'Koreksi Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/kelola-koreksi', badge: pendingCorrectionCount },
     { icon: <Users className="w-6 h-6" />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/daftar-siswa' },
   ];
 
@@ -113,19 +119,45 @@ export default function GuruDashboard() {
           <p className="text-sm text-white/80 mt-1">Tingkat Kehadiran Keseluruhan</p>
         </div>
 
+        {/* Pending Notifications Banner */}
+        {(pendingCorrectionCount > 0 || pendingLeaveCount > 0) && (
+          <div className="bg-warning/10 border border-warning/20 rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-warning" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-foreground">Pengajuan Menunggu</h4>
+                <p className="text-sm text-muted-foreground">
+                  {pendingLeaveCount > 0 && `${pendingLeaveCount} izin`}
+                  {pendingLeaveCount > 0 && pendingCorrectionCount > 0 && ' dan '}
+                  {pendingCorrectionCount > 0 && `${pendingCorrectionCount} koreksi`}
+                  {' '}perlu ditindaklanjuti
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Features Grid */}
         <div className="bg-card rounded-xl border border-border p-4">
           <h3 className="font-semibold text-foreground mb-4">Fitur Guru</h3>
           <div className="grid grid-cols-2 gap-3">
             {features.map((feature, index) => (
-              <FeatureCard
-                key={index}
-                icon={feature.icon}
-                label={feature.label}
-                bgColor={feature.bgColor}
-                iconBgColor={feature.iconBgColor}
-                onClick={() => navigate(feature.path)}
-              />
+              <div key={index} className="relative">
+                <FeatureCard
+                  icon={feature.icon}
+                  label={feature.label}
+                  bgColor={feature.bgColor}
+                  iconBgColor={feature.iconBgColor}
+                  onClick={() => navigate(feature.path)}
+                />
+                {feature.badge && feature.badge > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {feature.badge}
+                  </span>
+                )}
+              </div>
             ))}
           </div>
         </div>

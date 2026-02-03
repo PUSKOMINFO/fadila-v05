@@ -45,9 +45,9 @@ export default function Riwayat() {
     switch (status) {
       case 'hadir': return 'bg-success text-white';
       case 'terlambat': return 'bg-warning text-white';
-      case 'tidak_hadir': return 'bg-destructive text-white';
-      case 'izin': return 'bg-primary text-white';
-      case 'sakit': return 'bg-accent text-white';
+      case 'tidak_hadir': return 'bg-destructive text-white'; // MERAH - Tidak Hadir
+      case 'izin': return 'bg-blue-500 text-white'; // BIRU - Izin (berbeda dari primary/ungu)
+      case 'sakit': return 'bg-orange-500 text-white'; // ORANYE - Sakit
       default: return 'bg-muted text-muted-foreground';
     }
   };
@@ -84,10 +84,11 @@ export default function Riwayat() {
     hadir: monthlyAttendance.filter(a => a.status === 'hadir').length,
     terlambat: monthlyAttendance.filter(a => a.status === 'terlambat').length,
     tidak_hadir: monthlyAttendance.filter(a => a.status === 'tidak_hadir').length,
-    izin: monthlyAttendance.filter(a => a.status === 'izin' || a.status === 'sakit').length,
+    izin: monthlyAttendance.filter(a => a.status === 'izin').length,
+    sakit: monthlyAttendance.filter(a => a.status === 'sakit').length,
   };
 
-  const totalDays = stats.hadir + stats.terlambat + stats.tidak_hadir + stats.izin;
+  const totalDays = stats.hadir + stats.terlambat + stats.tidak_hadir + stats.izin + stats.sakit;
   const attendanceRate = totalDays > 0 ? Math.round(((stats.hadir + stats.terlambat) / totalDays) * 100) : 0;
 
   const selectedAttendance = selectedDate 
@@ -141,7 +142,7 @@ export default function Riwayat() {
             <p className="text-[10px] text-white/80">Absen</p>
           </div>
           <div className="bg-white/20 rounded-xl p-2 text-center backdrop-blur-sm">
-            <p className="text-xl font-bold">{stats.izin}</p>
+            <p className="text-xl font-bold">{stats.izin + stats.sakit}</p>
             <p className="text-[10px] text-white/80">Izin/Sakit</p>
           </div>
         </div>
@@ -232,8 +233,12 @@ export default function Riwayat() {
               <span className="text-xs text-muted-foreground">Tidak Hadir</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded bg-primary" />
-              <span className="text-xs text-muted-foreground">Izin/Sakit</span>
+              <div className="w-3 h-3 rounded bg-blue-500" />
+              <span className="text-xs text-muted-foreground">Izin</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded bg-orange-500" />
+              <span className="text-xs text-muted-foreground">Sakit</span>
             </div>
           </div>
         </div>

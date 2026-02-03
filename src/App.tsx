@@ -18,6 +18,7 @@ import RiwayatGuru from "./pages/RiwayatGuru";
 import ProfilGuru from "./pages/ProfilGuru";
 import DaftarSiswa from "./pages/DaftarSiswa";
 import Analitik from "./pages/Analitik";
+import KelolaKoreksi from "./pages/KelolaKoreksi";
 import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
 import { initializeMockData } from "./lib/mockData";
@@ -49,6 +50,7 @@ function AppContent() {
         <Route path="/profil-guru" element={<ProfilGuru />} />
         <Route path="/daftar-siswa" element={<DaftarSiswa />} />
         <Route path="/analitik" element={<Analitik />} />
+        <Route path="/kelola-koreksi" element={<KelolaKoreksi />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

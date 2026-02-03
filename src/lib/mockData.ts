@@ -92,6 +92,51 @@ export interface SubjectAttendance {
   keterangan?: string;
 }
 
+// Correction Request - synced between siswa and guru
+export interface CorrectionRequest {
+  id: string;
+  userId: string;
+  namaSiswa: string;
+  kelas: string;
+  tanggal: string;
+  jenisKoreksi: string;
+  alasan: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  catatanGuru?: string;
+}
+
+// Mock Correction Requests - seed data
+export const mockCorrectionRequests: CorrectionRequest[] = [
+  {
+    id: 'CR001',
+    userId: 'STU001',
+    namaSiswa: 'Fadhila Asla Shana',
+    kelas: 'Kelas 10A',
+    tanggal: '2026-01-15',
+    jenisKoreksi: 'Tidak tercatat hadir',
+    alasan: 'Saya hadir pada tanggal tersebut namun tidak tercatat dalam sistem karena terlambat scan fingerprint',
+    status: 'pending',
+    createdAt: '2026-01-16T08:00:00Z'
+  },
+  {
+    id: 'CR002',
+    userId: 'STU002',
+    namaSiswa: 'Rizki Pratama',
+    kelas: 'Kelas 10A',
+    tanggal: '2026-01-14',
+    jenisKoreksi: 'Salah status (hadir/terlambat)',
+    alasan: 'Status tercatat terlambat padahal saya hadir tepat waktu, mesin fingerprint error',
+    status: 'approved',
+    createdAt: '2026-01-15T09:00:00Z',
+    reviewedBy: 'TEA001',
+    reviewedAt: '2026-01-15T10:30:00Z',
+    catatanGuru: 'Sudah diverifikasi dengan catatan piket'
+  }
+];
+
 // Mock Users
 export const mockUsers: User[] = [
   {
@@ -181,6 +226,9 @@ export const mockAttendance: AttendanceRecord[] = [
   { id: 'ATT003', userId: 'STU003', tanggal: today, status: 'tidak_hadir', keterangan: 'Tanpa keterangan' },
   { id: 'ATT004', userId: 'STU004', tanggal: today, waktuMasuk: '07:10', status: 'hadir' },
   { id: 'ATT005', userId: 'STU005', tanggal: today, waktuMasuk: '07:45', status: 'terlambat' },
+  // Force data for January 28-29, 2026 - Tidak Hadir (Merah)
+  { id: 'ATT_JAN28', userId: 'STU001', tanggal: '2026-01-28', status: 'tidak_hadir', keterangan: 'Tanpa keterangan' },
+  { id: 'ATT_JAN29', userId: 'STU001', tanggal: '2026-01-29', status: 'tidak_hadir', keterangan: 'Tanpa keterangan' },
   // Historical data for STU001 (Fadhila)
   { id: 'ATT006', userId: 'STU001', tanggal: getDateStr(1), waktuMasuk: '07:20', status: 'hadir' },
   { id: 'ATT007', userId: 'STU001', tanggal: getDateStr(2), waktuMasuk: '07:25', status: 'hadir' },
@@ -517,6 +565,63 @@ export const initializeMockData = () => {
   if (!localStorage.getItem('subjectAttendance')) {
     localStorage.setItem('subjectAttendance', JSON.stringify(mockSubjectAttendance));
   }
+  if (!localStorage.getItem('correctionRequests')) {
+    localStorage.setItem('correctionRequests', JSON.stringify(mockCorrectionRequests));
+  }
+  
+  // Force refresh attendance data for January 2026 fix
+  forceRefreshAttendanceData();
+};
+
+// Force refresh attendance data to ensure Jan 28-29 are "tidak_hadir"
+export const forceRefreshAttendanceData = () => {
+  const attendance: AttendanceRecord[] = JSON.parse(localStorage.getItem('attendance') || '[]');
+  
+  // Check if Jan 28-29 2026 data exists
+  const hasJan28 = attendance.some(a => a.tanggal === '2026-01-28' && a.userId === 'STU001');
+  const hasJan29 = attendance.some(a => a.tanggal === '2026-01-29' && a.userId === 'STU001');
+  
+  let updated = false;
+  
+  if (!hasJan28) {
+    attendance.push({ 
+      id: 'ATT_JAN28', 
+      userId: 'STU001', 
+      tanggal: '2026-01-28', 
+      status: 'tidak_hadir', 
+      keterangan: 'Tanpa keterangan' 
+    });
+    updated = true;
+  } else {
+    // Force update status to tidak_hadir
+    const idx = attendance.findIndex(a => a.tanggal === '2026-01-28' && a.userId === 'STU001');
+    if (idx >= 0 && attendance[idx].status !== 'tidak_hadir') {
+      attendance[idx].status = 'tidak_hadir';
+      updated = true;
+    }
+  }
+  
+  if (!hasJan29) {
+    attendance.push({ 
+      id: 'ATT_JAN29', 
+      userId: 'STU001', 
+      tanggal: '2026-01-29', 
+      status: 'tidak_hadir', 
+      keterangan: 'Tanpa keterangan' 
+    });
+    updated = true;
+  } else {
+    // Force update status to tidak_hadir
+    const idx = attendance.findIndex(a => a.tanggal === '2026-01-29' && a.userId === 'STU001');
+    if (idx >= 0 && attendance[idx].status !== 'tidak_hadir') {
+      attendance[idx].status = 'tidak_hadir';
+      updated = true;
+    }
+  }
+  
+  if (updated) {
+    localStorage.setItem('attendance', JSON.stringify(attendance));
+  }
 };
 
 // Auth helpers
@@ -787,4 +892,72 @@ export const getAllSubjectAttendance = (): SubjectAttendance[] => {
 // Get all attendance records (for analytics)
 export const getAllAttendance = (): AttendanceRecord[] => {
   return JSON.parse(localStorage.getItem('attendance') || '[]');
+};
+
+// ==================== CORRECTION REQUEST HELPERS ====================
+
+// Create correction request (for students)
+export const createCorrectionRequest = (data: Omit<CorrectionRequest, 'id' | 'status' | 'createdAt'>): CorrectionRequest => {
+  const requests: CorrectionRequest[] = JSON.parse(localStorage.getItem('correctionRequests') || '[]');
+  const newRequest: CorrectionRequest = {
+    ...data,
+    id: `CR${Date.now()}`,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  requests.push(newRequest);
+  localStorage.setItem('correctionRequests', JSON.stringify(requests));
+  return newRequest;
+};
+
+// Get all correction requests (for teachers)
+export const getAllCorrectionRequests = (): CorrectionRequest[] => {
+  const requests: CorrectionRequest[] = JSON.parse(localStorage.getItem('correctionRequests') || '[]');
+  return requests.sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+};
+
+// Get user's correction requests (for students)
+export const getUserCorrectionRequests = (userId: string): CorrectionRequest[] => {
+  const requests: CorrectionRequest[] = JSON.parse(localStorage.getItem('correctionRequests') || '[]');
+  return requests
+    .filter(r => r.userId === userId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+};
+
+// Update correction request status (for teachers)
+export const updateCorrectionRequestStatus = (
+  requestId: string,
+  status: 'approved' | 'rejected',
+  reviewedBy: string,
+  catatanGuru?: string
+): CorrectionRequest | null => {
+  const requests: CorrectionRequest[] = JSON.parse(localStorage.getItem('correctionRequests') || '[]');
+  const index = requests.findIndex(r => r.id === requestId);
+  
+  if (index >= 0) {
+    requests[index] = {
+      ...requests[index],
+      status,
+      reviewedBy,
+      reviewedAt: new Date().toISOString(),
+      catatanGuru
+    };
+    localStorage.setItem('correctionRequests', JSON.stringify(requests));
+    return requests[index];
+  }
+  return null;
+};
+
+// Get pending correction requests count (for teacher dashboard)
+export const getPendingCorrectionCount = (): number => {
+  const requests: CorrectionRequest[] = JSON.parse(localStorage.getItem('correctionRequests') || '[]');
+  return requests.filter(r => r.status === 'pending').length;
+};
+
+// Get pending leave requests count (for teacher dashboard)
+export const getPendingLeaveCount = (): number => {
+  const requests: LeaveRequest[] = JSON.parse(localStorage.getItem('leaveRequests') || '[]');
+  return requests.filter(r => r.status === 'pending').length;
 };

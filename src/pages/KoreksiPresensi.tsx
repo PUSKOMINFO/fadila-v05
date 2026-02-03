@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ClipboardEdit, Calendar, Clock, Send, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowLeft, ClipboardEdit, Calendar, Clock, Send, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getCurrentUser, type User } from "@/lib/mockData";
+import { 
+  getCurrentUser, 
+  createCorrectionRequest, 
+  getUserCorrectionRequests,
+  type User, 
+  type CorrectionRequest 
+} from "@/lib/mockData";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { toast } from "sonner";
-
-interface CorrectionRequest {
-  id: string;
-  tanggal: string;
-  alasan: string;
-  status: 'pending' | 'approved' | 'rejected';
-  createdAt: string;
-}
 
 export default function KoreksiPresensi() {
   const navigate = useNavigate();
@@ -35,17 +33,14 @@ export default function KoreksiPresensi() {
     }
     setUser(currentUser);
 
-    // Load existing requests from localStorage
-    const savedRequests = localStorage.getItem(`correction_requests_${currentUser.id}`);
-    if (savedRequests) {
-      setRequests(JSON.parse(savedRequests));
-    }
+    // Load existing requests from shared storage
+    setRequests(getUserCorrectionRequests(currentUser.id));
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!tanggal || !jenisKoreksi || !alasan.trim()) {
+    if (!tanggal || !jenisKoreksi || !alasan.trim() || !user) {
       toast.error('Mohon lengkapi semua field');
       return;
     }
@@ -55,17 +50,18 @@ export default function KoreksiPresensi() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const newRequest: CorrectionRequest = {
-      id: Date.now().toString(),
+    // Create correction request using shared storage
+    createCorrectionRequest({
+      userId: user.id,
+      namaSiswa: user.nama,
+      kelas: user.kelas || '',
       tanggal,
-      alasan: `${jenisKoreksi}: ${alasan}`,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
+      jenisKoreksi,
+      alasan
+    });
 
-    const updatedRequests = [newRequest, ...requests];
-    setRequests(updatedRequests);
-    localStorage.setItem(`correction_requests_${user?.id}`, JSON.stringify(updatedRequests));
+    // Refresh requests list
+    setRequests(getUserCorrectionRequests(user.id));
 
     toast.success('Pengajuan koreksi berhasil dikirim');
     setTanggal('');
@@ -207,7 +203,14 @@ export default function KoreksiPresensi() {
                     </div>
                     {getStatusBadge(request.status)}
                   </div>
-                  <p className="text-sm text-muted-foreground">{request.alasan}</p>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium">{request.jenisKoreksi}:</span> {request.alasan}
+                  </p>
+                  {request.catatanGuru && (
+                    <p className="text-sm text-primary mt-2 bg-primary/10 p-2 rounded">
+                      <span className="font-medium">Catatan Guru:</span> {request.catatanGuru}
+                    </p>
+                  )}
                   <p className="text-xs text-muted-foreground mt-2">
                     Diajukan: {new Date(request.createdAt).toLocaleDateString('id-ID')}
                   </p>
