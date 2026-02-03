@@ -9,6 +9,7 @@ import GuruDashboard from "./pages/GuruDashboard";
 import JadwalMapel from "./pages/JadwalMapel";
 import PresensiMapel from "./pages/PresensiMapel";
 import Izin from "./pages/Izin";
+import KoreksiPresensi from "./pages/KoreksiPresensi";
 import Perpustakaan from "./pages/Perpustakaan";
 import Pengumuman from "./pages/Pengumuman";
 import Riwayat from "./pages/Riwayat";
@@ -39,6 +40,7 @@ function AppContent() {
         <Route path="/mapel" element={<JadwalMapel />} />
         <Route path="/presensi-mapel" element={<PresensiMapel />} />
         <Route path="/izin" element={<Izin />} />
+        <Route path="/koreksi-presensi" element={<KoreksiPresensi />} />
         <Route path="/perpustakaan" element={<Perpustakaan />} />
         <Route path="/pengumuman" element={<Pengumuman />} />
         <Route path="/riwayat" element={<Riwayat />} />
