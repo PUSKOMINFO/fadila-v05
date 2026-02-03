@@ -75,7 +75,9 @@ export default function JadwalMapel() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-xl font-bold">Jadwal Mengajar</h1>
+            <h1 className="text-xl font-bold">
+              {user.role === 'siswa' ? 'Jadwal Mapel' : 'Jadwal Mengajar'}
+            </h1>
             <p className="text-sm text-white/80">{user.role === 'siswa' ? user.kelas : user.mapel}</p>
           </div>
         </div>

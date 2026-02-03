@@ -36,6 +36,7 @@ function AppContent() {
         <Route path="/siswa" element={<SiswaDashboard />} />
         <Route path="/guru" element={<GuruDashboard />} />
         <Route path="/jadwal" element={<JadwalMapel />} />
+        <Route path="/mapel" element={<JadwalMapel />} />
         <Route path="/presensi-mapel" element={<PresensiMapel />} />
         <Route path="/izin" element={<Izin />} />
         <Route path="/perpustakaan" element={<Perpustakaan />} />
