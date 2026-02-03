@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, FileText, Library, Bell, ClipboardEdit, Users, TrendingUp, Clock, CalendarDays, Download, Calendar, Search, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -8,6 +7,24 @@ import { UserHeader } from "@/components/dashboard/UserHeader";
 import { StatCard } from "@/components/cards/StatCard";
 import { FeatureCard } from "@/components/cards/FeatureCard";
 import { AttendanceListItem } from "@/components/cards/AttendanceListItem";
+import { 
+  UsersIcon, 
+  PresentIcon, 
+  LateIcon, 
+  AbsentIcon,
+  BookIcon,
+  DocumentIcon,
+  LibraryIcon,
+  BellIcon,
+  ClipboardIcon,
+  StudentListIcon,
+  DownloadIcon,
+  ScheduleIcon,
+  SearchIcon,
+  CheckCircleIcon,
+  AlertIcon,
+  TrendUpIcon
+} from "@/components/icons/FlatIcons";
 import { getCurrentUser, logout, getStudents, getTodayAttendance, getPendingCorrectionCount, getPendingLeaveCount, type User, type AttendanceRecord } from "@/lib/mockData";
 import { toast } from "sonner";
 
@@ -48,12 +65,12 @@ export default function GuruDashboard() {
   if (!user) return null;
 
   const features = [
-    { icon: <BookOpen className="w-6 h-6" />, label: 'Jadwal Mengajar', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/jadwal' },
-    { icon: <FileText className="w-6 h-6" />, label: 'Izin Siswa', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin', badge: pendingLeaveCount },
-    { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
-    { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
-    { icon: <ClipboardEdit className="w-6 h-6" />, label: 'Koreksi Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/kelola-koreksi', badge: pendingCorrectionCount },
-    { icon: <Users className="w-6 h-6" />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/daftar-siswa' },
+    { icon: <BookIcon size={24} />, label: 'Jadwal Mengajar', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/jadwal' },
+    { icon: <DocumentIcon size={24} />, label: 'Izin Siswa', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin', badge: pendingLeaveCount },
+    { icon: <LibraryIcon size={24} />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
+    { icon: <BellIcon size={24} />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
+    { icon: <ClipboardIcon size={24} />, label: 'Koreksi Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/kelola-koreksi', badge: pendingCorrectionCount },
+    { icon: <StudentListIcon size={24} />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/daftar-siswa' },
   ];
 
   // Calculate stats
@@ -88,28 +105,24 @@ export default function GuruDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <StatCard
-            icon={<Users className="w-6 h-6" />}
+            icon={<UsersIcon size={28} />}
             value={totalStudents}
             label="Total Siswa"
-            iconColor="text-primary"
           />
           <StatCard
-            icon={<TrendingUp className="w-6 h-6" />}
+            icon={<PresentIcon size={28} />}
             value={hadirCount}
             label="Hadir Hari Ini"
-            iconColor="text-success"
           />
           <StatCard
-            icon={<Clock className="w-6 h-6" />}
+            icon={<LateIcon size={28} />}
             value={terlambatCount}
             label="Terlambat Hari Ini"
-            iconColor="text-warning"
           />
           <StatCard
-            icon={<CalendarDays className="w-6 h-6" />}
+            icon={<AbsentIcon size={28} />}
             value={tidakHadirCount}
             label="Tidak Hadir Hari Ini"
-            iconColor="text-destructive"
           />
         </div>
 
@@ -124,7 +137,7 @@ export default function GuruDashboard() {
           <div className="bg-warning/10 border border-warning/20 rounded-xl p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-warning" />
+                <AlertIcon size={24} />
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-foreground">Pengajuan Menunggu</h4>
@@ -169,11 +182,11 @@ export default function GuruDashboard() {
             <h3 className="font-semibold text-foreground">Presensi Hari Ini</h3>
             <div className="flex items-center gap-2">
               <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-border">
-                <Download className="w-3 h-3" />
+                <DownloadIcon size={14} />
                 Ekspor
               </button>
               <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-border">
-                <Calendar className="w-3 h-3" />
+                <ScheduleIcon size={14} />
                 Riwayat
               </button>
             </div>
@@ -192,7 +205,7 @@ export default function GuruDashboard() {
             <div className="flex items-center gap-4">
               {/* Icon Container with Animation */}
               <div className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:rotate-6 transition-transform duration-300">
-                <BookOpen className="w-7 h-7 text-white" />
+                <BookIcon size={28} />
               </div>
               
               <div className="text-left">
@@ -203,24 +216,24 @@ export default function GuruDashboard() {
             
             {/* Arrow with Animation */}
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 group-hover:translate-x-1 transition-all duration-300">
-              <TrendingUp className="w-5 h-5 text-white" />
+              <TrendUpIcon size={20} />
             </div>
           </div>
           
           {/* Stats Preview */}
           <div className="relative flex items-center gap-3 mt-4 pt-3 border-t border-white/20">
             <div className="flex items-center gap-1.5 text-white/80 text-xs">
-              <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+              <CheckCircleIcon size={14} />
               <span>6 Mapel Aktif</span>
             </div>
             <div className="w-1 h-1 rounded-full bg-white/40" />
             <div className="flex items-center gap-1.5 text-white/80 text-xs">
-              <Users className="w-3.5 h-3.5" />
+              <UsersIcon size={14} />
               <span>{totalStudents} Siswa</span>
             </div>
             <div className="w-1 h-1 rounded-full bg-white/40" />
             <div className="flex items-center gap-1.5 text-white/80 text-xs">
-              <TrendingUp className="w-3.5 h-3.5 text-success" />
+              <TrendUpIcon size={14} />
               <span>{attendancePercentage}%</span>
             </div>
           </div>
@@ -228,7 +241,9 @@ export default function GuruDashboard() {
 
           {/* Search */}
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              <SearchIcon size={16} />
+            </div>
             <Input
               placeholder="Cari siswa..."
               value={searchQuery}

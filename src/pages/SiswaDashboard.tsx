@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, FileText, Library, Bell, Calendar, ClipboardEdit, CheckCircle2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { UserHeader } from "@/components/dashboard/UserHeader";
@@ -9,6 +8,16 @@ import { FeatureCard } from "@/components/cards/FeatureCard";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { getCurrentUser, logout, getTodaySchedules, getUserAttendance, recordAttendance, type User, type AttendanceRecord } from "@/lib/mockData";
 import { toast } from "sonner";
+import {
+  ScheduleIcon,
+  DocumentIcon,
+  LibraryIcon,
+  BellIcon,
+  ClipboardIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  BookIcon
+} from "@/components/icons/FlatIcons";
 
 export default function SiswaDashboard() {
   const navigate = useNavigate();
@@ -61,15 +70,15 @@ export default function SiswaDashboard() {
   if (!user) return null;
 
   const features = [
-    { icon: <Calendar className="w-6 h-6" />, label: 'Jadwal Mapel', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/mapel' },
-    { icon: <FileText className="w-6 h-6" />, label: 'Izin', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin' },
-    { icon: <Library className="w-6 h-6" />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
-    { icon: <Bell className="w-6 h-6" />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
+    { icon: <ScheduleIcon size={24} />, label: 'Jadwal Mapel', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/mapel' },
+    { icon: <DocumentIcon size={24} />, label: 'Izin', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin' },
+    { icon: <LibraryIcon size={24} />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
+    { icon: <BellIcon size={24} />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
   ];
 
   const quickActions = [
-    { icon: <ClipboardEdit className="w-5 h-5" />, label: 'Ajukan Koreksi Presensi', path: '/koreksi-presensi' },
-    { icon: <CheckCircle2 className="w-5 h-5" />, label: 'Lihat Presensi Mapel', path: '/presensi-mapel' },
+    { icon: <ClipboardIcon size={20} />, label: 'Ajukan Koreksi Presensi', path: '/koreksi-presensi' },
+    { icon: <CheckCircleIcon size={20} />, label: 'Lihat Presensi Mapel', path: '/presensi-mapel' },
   ];
 
   const todaySchedules = getTodaySchedules(user.kelas || '');
@@ -111,8 +120,8 @@ export default function SiswaDashboard() {
               </div>
             ) : (
               <div className="text-center py-6">
-                <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
-                <p className="font-medium text-foreground">Tidak Ada Jadwal Saat Ini</p>
+                <BookIcon size={48} />
+                <p className="font-medium text-foreground mt-3">Tidak Ada Jadwal Saat Ini</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Tidak ada mata pelajaran yang sedang atau akan berlangsung
                 </p>
@@ -138,8 +147,8 @@ export default function SiswaDashboard() {
             </Button>
           ) : (
             <div className="bg-success/10 text-success rounded-xl p-4 text-center">
-              <CheckCircle2 className="w-8 h-8 mx-auto mb-2" />
-              <p className="font-medium">Sudah Presensi</p>
+              <CheckCircleIcon size={32} />
+              <p className="font-medium mt-2">Sudah Presensi</p>
               <p className="text-sm opacity-80">Waktu: {todayAttendance.waktuMasuk}</p>
             </div>
           )}
@@ -176,7 +185,7 @@ export default function SiswaDashboard() {
                   <span className="text-muted-foreground">{action.icon}</span>
                   <span className="text-sm font-medium text-foreground">{action.label}</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <ChevronRightIcon size={16} />
               </button>
             ))}
           </div>

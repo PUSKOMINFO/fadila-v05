@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, Search, Users, CheckCircle2, Clock, XCircle, Edit2, Save, Filter } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,6 +9,17 @@ import { getCurrentUser, getStudents, type User, type AttendanceRecord } from "@
 import { cn } from "@/lib/utils";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { toast } from "sonner";
+import {
+  ArrowLeftIcon,
+  SearchIcon,
+  UsersIcon,
+  PresentIcon,
+  LateIcon,
+  AbsentIcon,
+  EditIcon,
+  SaveIcon,
+  FilterIcon
+} from "@/components/icons/FlatIcons";
 
 const MONTHS = [
   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -67,10 +78,10 @@ export default function RiwayatGuru() {
 
   const getStatusIcon = (status?: AttendanceRecord['status']) => {
     switch (status) {
-      case 'hadir': return <CheckCircle2 className="w-4 h-4" />;
-      case 'terlambat': return <Clock className="w-4 h-4" />;
-      case 'tidak_hadir': return <XCircle className="w-4 h-4" />;
-      default: return <XCircle className="w-4 h-4" />;
+      case 'hadir': return <PresentIcon size={16} />;
+      case 'terlambat': return <LateIcon size={16} />;
+      case 'tidak_hadir': return <AbsentIcon size={16} />;
+      default: return <AbsentIcon size={16} />;
     }
   };
 
@@ -155,7 +166,7 @@ export default function RiwayatGuru() {
             onClick={() => navigate('/guru')}
             className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeftIcon size={20} />
           </button>
           <div>
             <h1 className="text-xl font-bold">Kelola Presensi</h1>
@@ -205,7 +216,9 @@ export default function RiwayatGuru() {
       <div className="px-4 py-4 space-y-3">
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
+              <SearchIcon size={16} />
+            </div>
             <Input
               placeholder="Cari siswa..."
               value={searchQuery}
@@ -215,7 +228,7 @@ export default function RiwayatGuru() {
           </div>
           <Select value={filterStatus} onValueChange={setFilterStatus}>
             <SelectTrigger className="w-32">
-              <Filter className="w-4 h-4 mr-1" />
+              <FilterIcon size={16} />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -259,7 +272,7 @@ export default function RiwayatGuru() {
                     onClick={() => handleEditAttendance(student)}
                     className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 transition-colors"
                   >
-                    <Edit2 className="w-4 h-4" />
+                    <EditIcon size={16} />
                   </button>
                 </div>
               </div>
@@ -268,8 +281,8 @@ export default function RiwayatGuru() {
 
           {filteredStudents.length === 0 && (
             <div className="p-8 text-center">
-              <Users className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="font-medium text-foreground">Tidak Ada Siswa</p>
+              <UsersIcon size={48} />
+              <p className="font-medium text-foreground mt-3">Tidak Ada Siswa</p>
               <p className="text-sm text-muted-foreground">Tidak ada siswa yang sesuai filter</p>
             </div>
           )}
@@ -324,8 +337,8 @@ export default function RiwayatGuru() {
                 onClick={handleSaveAttendance}
                 className="w-full gradient-primary text-white py-5 rounded-xl"
               >
-                <Save className="w-4 h-4 mr-2" />
-                Simpan Perubahan
+                <SaveIcon size={16} />
+                <span className="ml-2">Simpan Perubahan</span>
               </Button>
             </div>
           )}
