@@ -12,7 +12,6 @@ export default function DaftarSiswa() {
   const [user, setUser] = useState<User | null>(null);
   const [students, setStudents] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('beranda');
   const [selectedKelas, setSelectedKelas] = useState<string>('all');
 
   useEffect(() => {
@@ -165,10 +164,10 @@ export default function DaftarSiswa() {
 
       {/* Bottom Navigation */}
       <BottomNav 
-        activeTab={activeTab} 
+        activeTab="beranda" 
         onTabChange={(tab) => {
-          setActiveTab(tab);
           if (tab === 'beranda') navigate('/guru');
+          if (tab === 'analitik') navigate('/analitik');
           if (tab === 'riwayat') navigate('/riwayat-guru');
           if (tab === 'profil') navigate('/profil-guru');
         }} 

@@ -58,6 +58,7 @@ export default function PresensiMapel() {
   const handleNavChange = (tab: string) => {
     if (user?.role === 'guru') {
       if (tab === 'beranda') navigate('/guru');
+      if (tab === 'analitik') navigate('/analitik');
       if (tab === 'riwayat') navigate('/riwayat-guru');
       if (tab === 'profil') navigate('/profil-guru');
     } else {
