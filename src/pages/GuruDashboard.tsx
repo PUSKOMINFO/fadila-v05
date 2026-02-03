@@ -65,12 +65,12 @@ export default function GuruDashboard() {
   if (!user) return null;
 
   const features = [
-    { icon: <BookIcon size={24} />, label: 'Jadwal Mengajar', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/jadwal' },
-    { icon: <DocumentIcon size={24} />, label: 'Izin Siswa', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin', badge: pendingLeaveCount },
-    { icon: <LibraryIcon size={24} />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
-    { icon: <BellIcon size={24} />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
-    { icon: <ClipboardIcon size={24} />, label: 'Koreksi Presensi', bgColor: 'cyan' as const, iconBgColor: 'bg-accent', path: '/kelola-koreksi', badge: pendingCorrectionCount },
-    { icon: <StudentListIcon size={24} />, label: 'Daftar Siswa', bgColor: 'blue' as const, iconBgColor: 'bg-primary', path: '/daftar-siswa' },
+    { icon: <BookIcon size={32} />, label: 'Jadwal Mengajar', bgColor: 'purple' as const, path: '/jadwal' },
+    { icon: <DocumentIcon size={32} />, label: 'Izin Siswa', bgColor: 'yellow' as const, path: '/izin', badge: pendingLeaveCount },
+    { icon: <LibraryIcon size={32} />, label: 'Perpustakaan', bgColor: 'green' as const, path: '/perpustakaan' },
+    { icon: <BellIcon size={32} />, label: 'Pengumuman', bgColor: 'pink' as const, path: '/pengumuman' },
+    { icon: <ClipboardIcon size={32} />, label: 'Koreksi Presensi', bgColor: 'cyan' as const, path: '/kelola-koreksi', badge: pendingCorrectionCount },
+    { icon: <StudentListIcon size={32} />, label: 'Daftar Siswa', bgColor: 'blue' as const, path: '/daftar-siswa' },
   ];
 
   // Calculate stats
@@ -155,22 +155,16 @@ export default function GuruDashboard() {
         {/* Features Grid */}
         <div className="bg-card rounded-xl border border-border p-4">
           <h3 className="font-semibold text-foreground mb-4">Fitur Guru</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {features.map((feature, index) => (
-              <div key={index} className="relative">
-                <FeatureCard
-                  icon={feature.icon}
-                  label={feature.label}
-                  bgColor={feature.bgColor}
-                  iconBgColor={feature.iconBgColor}
-                  onClick={() => navigate(feature.path)}
-                />
-                {feature.badge && feature.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-white text-xs font-bold rounded-full flex items-center justify-center">
-                    {feature.badge}
-                  </span>
-                )}
-              </div>
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                label={feature.label}
+                bgColor={feature.bgColor}
+                onClick={() => navigate(feature.path)}
+                badge={feature.badge}
+              />
             ))}
           </div>
         </div>
