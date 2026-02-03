@@ -265,13 +265,15 @@ export default function Analitik() {
             <div className="grid grid-cols-2 gap-3">
               {weeklyStatCards.map((stat, index) => (
                 <div key={index} className="bg-card rounded-xl border border-border p-4">
-                  <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center mb-3", stat.bgColor)}>
-                    {stat.icon}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center shrink-0", stat.bgColor)}>
+                      {stat.icon}
+                    </div>
+                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
                   </div>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
                   <div className={cn(
-                    "flex items-center gap-1 mt-2 text-xs font-medium",
+                    "flex items-center gap-1 mt-1 text-xs font-medium",
                     stat.trendUp ? "text-success" : "text-destructive"
                   )}>
                     {stat.trendUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
@@ -387,13 +389,15 @@ export default function Analitik() {
             <div className="grid grid-cols-2 gap-3">
               {monthlyStatCards.map((stat, index) => (
                 <div key={index} className="bg-card rounded-xl border border-border p-4">
-                  <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center mb-3", stat.bgColor)}>
-                    {stat.icon}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center shrink-0", stat.bgColor)}>
+                      {stat.icon}
+                    </div>
+                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
                   </div>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
                   <div className={cn(
-                    "flex items-center gap-1 mt-2 text-xs font-medium",
+                    "flex items-center gap-1 mt-1 text-xs font-medium",
                     stat.trendUp ? "text-success" : "text-destructive"
                   )}>
                     {stat.trendUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
