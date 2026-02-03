@@ -12,7 +12,7 @@ export function BottomNav({ activeTab, onTabChange, role }: BottomNavProps) {
     ? [
         { id: 'beranda', label: 'Beranda', icon: Home },
         { id: 'analitik', label: 'Analitik', icon: BarChart3 },
-        { id: 'riwayat', label: 'Riwayat', icon: Calendar },
+        { id: 'riwayat', label: 'Kelola', icon: Calendar },
         { id: 'profil', label: 'Profil', icon: User },
       ]
     : [
