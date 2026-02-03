@@ -70,15 +70,15 @@ export default function SiswaDashboard() {
   if (!user) return null;
 
   const features = [
-    { icon: <ScheduleIcon size={24} />, label: 'Jadwal Mapel', bgColor: 'purple' as const, iconBgColor: 'bg-primary', path: '/mapel' },
-    { icon: <DocumentIcon size={24} />, label: 'Izin', bgColor: 'yellow' as const, iconBgColor: 'bg-warning', path: '/izin' },
-    { icon: <LibraryIcon size={24} />, label: 'Perpustakaan', bgColor: 'green' as const, iconBgColor: 'bg-success', path: '/perpustakaan' },
-    { icon: <BellIcon size={24} />, label: 'Pengumuman', bgColor: 'pink' as const, iconBgColor: 'bg-destructive', path: '/pengumuman' },
+    { icon: <ScheduleIcon size={32} />, label: 'Jadwal Mapel', bgColor: 'purple' as const, path: '/mapel' },
+    { icon: <DocumentIcon size={32} />, label: 'Izin', bgColor: 'yellow' as const, path: '/izin' },
+    { icon: <LibraryIcon size={32} />, label: 'Perpustakaan', bgColor: 'green' as const, path: '/perpustakaan' },
+    { icon: <BellIcon size={32} />, label: 'Pengumuman', bgColor: 'pink' as const, path: '/pengumuman' },
   ];
 
   const quickActions = [
-    { icon: <ClipboardIcon size={20} />, label: 'Ajukan Koreksi Presensi', path: '/koreksi-presensi' },
-    { icon: <CheckCircleIcon size={20} />, label: 'Lihat Presensi Mapel', path: '/presensi-mapel' },
+    { icon: <ClipboardIcon size={24} />, label: 'Ajukan Koreksi Presensi', path: '/koreksi-presensi' },
+    { icon: <CheckCircleIcon size={24} />, label: 'Lihat Presensi Mapel', path: '/presensi-mapel' },
   ];
 
   const todaySchedules = getTodaySchedules(user.kelas || '');
@@ -157,14 +157,13 @@ export default function SiswaDashboard() {
         {/* Features Grid */}
         <div className="bg-card rounded-xl border border-border p-4">
           <h3 className="font-semibold text-foreground mb-4">Fitur Siswa</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {features.map((feature, index) => (
               <FeatureCard
                 key={index}
                 icon={feature.icon}
                 label={feature.label}
                 bgColor={feature.bgColor}
-                iconBgColor={feature.iconBgColor}
                 onClick={() => navigate(feature.path)}
               />
             ))}

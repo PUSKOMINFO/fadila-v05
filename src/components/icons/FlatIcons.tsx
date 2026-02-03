@@ -101,16 +101,20 @@ export function AbsentIcon({ className, size = 24 }: IconProps) {
   );
 }
 
-// Feature Icons
+// Feature Icons - Enhanced Flat 2.0 Style for Education Apps
 export function BookIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M4 4C4 3.44772 4.44772 3 5 3H11V21H5C4.44772 21 4 20.5523 4 20V4Z" fill="#5B8DEF"/>
-      <path d="M13 3H19C19.5523 3 20 3.44772 20 4V20C20 20.5523 19.5523 21 19 21H13V3Z" fill="#9B51E0"/>
-      <rect x="6" y="6" width="3" height="1.5" rx="0.5" fill="white" fillOpacity="0.7"/>
-      <rect x="6" y="9" width="4" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
-      <rect x="15" y="6" width="3" height="1.5" rx="0.5" fill="white" fillOpacity="0.7"/>
-      <rect x="15" y="9" width="4" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
+      {/* Open book with colorful pages */}
+      <path d="M12 4C12 4 9 3 6 3C3 3 2 4 2 4V19C2 19 3 18 6 18C9 18 12 19 12 19V4Z" fill="#5B8DEF"/>
+      <path d="M12 4C12 4 15 3 18 3C21 3 22 4 22 4V19C22 19 21 18 18 18C15 18 12 19 12 19V4Z" fill="#9B51E0"/>
+      <rect x="4" y="6" width="5" height="1.5" rx="0.75" fill="white" fillOpacity="0.8"/>
+      <rect x="4" y="9" width="4" height="1.5" rx="0.75" fill="white" fillOpacity="0.6"/>
+      <rect x="4" y="12" width="5" height="1.5" rx="0.75" fill="white" fillOpacity="0.5"/>
+      <rect x="15" y="6" width="5" height="1.5" rx="0.75" fill="white" fillOpacity="0.8"/>
+      <rect x="15" y="9" width="4" height="1.5" rx="0.75" fill="white" fillOpacity="0.6"/>
+      <rect x="15" y="12" width="5" height="1.5" rx="0.75" fill="white" fillOpacity="0.5"/>
+      <path d="M12 4V19" stroke="#FFD166" strokeWidth="2"/>
     </svg>
   );
 }
@@ -118,11 +122,13 @@ export function BookIcon({ className, size = 24 }: IconProps) {
 export function DocumentIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M6 3C5.44772 3 5 3.44772 5 4V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V8L14 3H6Z" fill="#F2994A"/>
-      <path d="M14 3V7C14 7.55228 14.4477 8 15 8H19L14 3Z" fill="#FFD166"/>
-      <rect x="7" y="11" width="8" height="1.5" rx="0.5" fill="white" fillOpacity="0.7"/>
-      <rect x="7" y="14" width="10" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
-      <rect x="7" y="17" width="6" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
+      {/* Permission/Izin document with stamp */}
+      <rect x="4" y="2" width="16" height="20" rx="2" fill="#FFD166"/>
+      <rect x="4" y="2" width="16" height="5" rx="1" fill="#F2994A"/>
+      <rect x="7" y="10" width="10" height="2" rx="1" fill="white" fillOpacity="0.9"/>
+      <rect x="7" y="14" width="7" height="2" rx="1" fill="white" fillOpacity="0.7"/>
+      <circle cx="16" cy="17" r="4" fill="#6FCF97"/>
+      <path d="M14.5 17L15.5 18L17.5 16" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
@@ -130,10 +136,15 @@ export function DocumentIcon({ className, size = 24 }: IconProps) {
 export function LibraryIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <rect x="2" y="5" width="5" height="16" rx="1" fill="#6FCF97"/>
-      <rect x="8" y="3" width="5" height="18" rx="1" fill="#5B8DEF"/>
-      <rect x="14" y="6" width="5" height="15" rx="1" fill="#9B51E0"/>
-      <rect x="20" y="8" width="2" height="13" rx="0.5" fill="#F2994A"/>
+      {/* Colorful stacked books */}
+      <rect x="3" y="5" width="4" height="16" rx="1" fill="#5B8DEF"/>
+      <rect x="4" y="7" width="2" height="4" rx="0.5" fill="white" fillOpacity="0.5"/>
+      <rect x="8" y="3" width="4" height="18" rx="1" fill="#6FCF97"/>
+      <rect x="9" y="5" width="2" height="5" rx="0.5" fill="white" fillOpacity="0.5"/>
+      <rect x="13" y="6" width="4" height="15" rx="1" fill="#9B51E0"/>
+      <rect x="14" y="8" width="2" height="4" rx="0.5" fill="white" fillOpacity="0.5"/>
+      <rect x="18" y="8" width="3" height="13" rx="1" fill="#F2994A"/>
+      <rect x="19" y="10" width="1" height="3" rx="0.25" fill="white" fillOpacity="0.5"/>
     </svg>
   );
 }
@@ -141,9 +152,11 @@ export function LibraryIcon({ className, size = 24 }: IconProps) {
 export function BellIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M12 3C8.68629 3 6 5.68629 6 9V14L4 17H20L18 14V9C18 5.68629 15.3137 3 12 3Z" fill="#EB5757"/>
-      <path d="M10 20C10 21.1046 10.8954 22 12 22C13.1046 22 14 21.1046 14 20H10Z" fill="#FFD166"/>
-      <circle cx="17" cy="5" r="3" fill="#5B8DEF"/>
+      {/* Notification bell with badge */}
+      <path d="M12 3C8.13401 3 5 6.13401 5 10V15L3 18H21L19 15V10C19 6.13401 15.866 3 12 3Z" fill="#EB5757"/>
+      <ellipse cx="12" cy="21" rx="3" ry="2" fill="#FFD166"/>
+      <circle cx="17" cy="5" r="4" fill="#5B8DEF"/>
+      <text x="17" y="7" textAnchor="middle" fill="white" fontSize="6" fontWeight="bold">!</text>
     </svg>
   );
 }
@@ -151,11 +164,14 @@ export function BellIcon({ className, size = 24 }: IconProps) {
 export function ClipboardIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <rect x="5" y="4" width="14" height="17" rx="2" fill="#56CCF2"/>
-      <rect x="8" y="2" width="8" height="4" rx="1" fill="#9B51E0"/>
-      <rect x="7" y="9" width="6" height="1.5" rx="0.5" fill="white" fillOpacity="0.7"/>
-      <rect x="7" y="12" width="10" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
-      <rect x="7" y="15" width="8" height="1.5" rx="0.5" fill="white" fillOpacity="0.5"/>
+      {/* Clipboard with checkmark - Koreksi Presensi */}
+      <rect x="4" y="4" width="16" height="18" rx="2" fill="#56CCF2"/>
+      <rect x="7" y="2" width="10" height="4" rx="1" fill="#9B51E0"/>
+      <circle cx="9" cy="3.5" r="0.75" fill="white"/>
+      <circle cx="12" cy="3.5" r="0.75" fill="white"/>
+      <circle cx="15" cy="3.5" r="0.75" fill="white"/>
+      <rect x="7" y="10" width="8" height="2" rx="1" fill="white" fillOpacity="0.9"/>
+      <rect x="7" y="14" width="6" height="2" rx="1" fill="white" fillOpacity="0.7"/>
       <circle cx="16" cy="17" r="4" fill="#6FCF97"/>
       <path d="M14.5 17L15.5 18L17.5 16" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
@@ -165,11 +181,12 @@ export function ClipboardIcon({ className, size = 24 }: IconProps) {
 export function StudentListIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <rect x="3" y="4" width="18" height="16" rx="2" fill="#5B8DEF"/>
-      <circle cx="8" cy="9" r="2" fill="#FFD166"/>
-      <circle cx="8" cy="15" r="2" fill="#6FCF97"/>
-      <rect x="12" y="8" width="6" height="2" rx="0.5" fill="white" fillOpacity="0.7"/>
-      <rect x="12" y="14" width="6" height="2" rx="0.5" fill="white" fillOpacity="0.7"/>
+      {/* Student list with profiles */}
+      <rect x="3" y="3" width="18" height="18" rx="3" fill="#5B8DEF"/>
+      <circle cx="8" cy="8" r="2.5" fill="#FFD166"/>
+      <circle cx="8" cy="15" r="2.5" fill="#6FCF97"/>
+      <rect x="12" y="6.5" width="6" height="2.5" rx="1" fill="white" fillOpacity="0.9"/>
+      <rect x="12" y="13.5" width="6" height="2.5" rx="1" fill="white" fillOpacity="0.9"/>
     </svg>
   );
 }
@@ -177,15 +194,16 @@ export function StudentListIcon({ className, size = 24 }: IconProps) {
 export function ScheduleIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <rect x="3" y="5" width="18" height="16" rx="2" fill="#9B51E0"/>
-      <rect x="3" y="5" width="18" height="4" fill="#EB5757"/>
-      <circle cx="7" cy="5" r="2" fill="#5B8DEF"/>
-      <circle cx="17" cy="5" r="2" fill="#5B8DEF"/>
-      <rect x="6" y="12" width="3" height="2" rx="0.5" fill="#FFD166"/>
-      <rect x="10.5" y="12" width="3" height="2" rx="0.5" fill="#6FCF97"/>
-      <rect x="15" y="12" width="3" height="2" rx="0.5" fill="#56CCF2"/>
-      <rect x="6" y="16" width="3" height="2" rx="0.5" fill="white" fillOpacity="0.5"/>
-      <rect x="10.5" y="16" width="3" height="2" rx="0.5" fill="white" fillOpacity="0.5"/>
+      {/* Jadwal Mapel - Class schedule calendar */}
+      <rect x="3" y="4" width="18" height="17" rx="3" fill="#9B51E0"/>
+      <rect x="3" y="4" width="18" height="5" rx="2" fill="#5B8DEF"/>
+      <circle cx="7" cy="4" r="2" fill="#FFD166"/>
+      <circle cx="17" cy="4" r="2" fill="#FFD166"/>
+      <rect x="6" y="12" width="4" height="3" rx="1" fill="#6FCF97"/>
+      <rect x="11" y="12" width="3" height="3" rx="1" fill="#FFD166"/>
+      <rect x="15" y="12" width="4" height="3" rx="1" fill="#56CCF2"/>
+      <rect x="6" y="16" width="3" height="2" rx="0.5" fill="white" fillOpacity="0.6"/>
+      <rect x="11" y="16" width="4" height="2" rx="0.5" fill="white" fillOpacity="0.6"/>
     </svg>
   );
 }
@@ -249,7 +267,9 @@ export function SearchIcon({ className, size = 24 }: IconProps) {
 export function CheckCircleIcon({ className, size = 24 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Success checkmark with glow effect */}
       <circle cx="12" cy="12" r="10" fill="#6FCF97"/>
+      <circle cx="12" cy="12" r="7" fill="#7DD8A3" fillOpacity="0.5"/>
       <path d="M7 12L10.5 15.5L17 9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
