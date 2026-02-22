@@ -548,9 +548,8 @@ export const initializeMockData = () => {
   if (!localStorage.getItem('attendance')) {
     localStorage.setItem('attendance', JSON.stringify(mockAttendance));
   }
-  if (!localStorage.getItem('schedules')) {
-    localStorage.setItem('schedules', JSON.stringify(mockSchedules));
-  }
+  // Always update schedules to sync with latest mockSchedules data
+  localStorage.setItem('schedules', JSON.stringify(mockSchedules));
   if (!localStorage.getItem('leaveRequests')) {
     localStorage.setItem('leaveRequests', JSON.stringify(mockLeaveRequests));
   }
