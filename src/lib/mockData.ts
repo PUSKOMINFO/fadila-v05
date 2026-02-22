@@ -273,6 +273,7 @@ export const mockSchedules: Schedule[] = [
   { id: 'SCH017', hari: 'Jumat', jamMulai: '07:00', jamSelesai: '08:30', mapel: 'Agama', guru: 'Bapak Usman', kelas: 'Kelas 10A', ruangan: 'R.Agama' },
   { id: 'SCH018', hari: 'Jumat', jamMulai: '08:30', jamSelesai: '10:00', mapel: 'Bahasa Jawa', guru: 'Ibu Siti', kelas: 'Kelas 10A', ruangan: 'R.101' },
   { id: 'SCH019', hari: 'Jumat', jamMulai: '10:15', jamSelesai: '11:30', mapel: 'BK', guru: 'Ibu Lestari', kelas: 'Kelas 10A', ruangan: 'R.BK' },
+  { id: 'SCH020', hari: 'Jumat', jamMulai: '13:00', jamSelesai: '15:00', mapel: 'Matematika', guru: 'Ibu Sari Wulandari', kelas: 'Kelas 10A', ruangan: 'R.101' },
 ];
 
 // Mock Leave Requests - with comprehensive seed data
